@@ -2,4 +2,9 @@
 <resources>
     <string name="app_name">НМедиа</string>
     <string name="nmedia">НМедиа!</string>
+    <string name="description_post_author_avatar">avatar</string>
+    <string name="more_vertical">more vertical</string>
+    <string name="likes">likes</string>
+    <string name="views">views</string>
+    <string name="shares">shares</string>
 </resources>
