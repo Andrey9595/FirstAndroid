@@ -82,14 +82,15 @@
 
 
     <androidx.constraintlayout.widget.Barrier
-        android:id="@+id/barrier7"
+        android:id="@+id/barrierTwo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/nmedia"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_marginTop="@dimen/common_spacing"
+        android:visibility="visible"
+        app:barrierDirection="bottom"
+        app:layout_constraintTop_toBottomOf="@id/content"
+        app:constraint_referenced_ids="content" />
 
     <ImageButton
         android:id="@+id/btn_likes"
@@ -101,7 +102,7 @@
         android:contentDescription="@string/likes"
         app:layout_constraintEnd_toStartOf="@id/text_likes"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/barrier7"
+        app:layout_constraintTop_toBottomOf="@id/barrierTwo"
         app:srcCompat="@drawable/ic_like_24" />
 
     <TextView
@@ -125,7 +126,7 @@
         android:contentDescription="@string/shares"
         app:layout_constraintEnd_toStartOf="@id/text_shares"
         app:layout_constraintStart_toEndOf="@id/text_likes"
-        app:layout_constraintTop_toBottomOf="@id/barrier7"
+        app:layout_constraintTop_toBottomOf="@id/barrierTwo"
         app:srcCompat="@drawable/ic_share_24" />
 
     <TextView
@@ -159,21 +160,9 @@
         android:textColor="@color/gray"
         android:layout_marginHorizontal="@dimen/common_spacing"
         android:layout_marginTop="@dimen/common_spacing"
-        app:layout_constraintTop_toBottomOf="@id/barrier7"
+        app:layout_constraintTop_toBottomOf="@id/barrierTwo"
         app:layout_constraintEnd_toEndOf="parent"
         tools:text="@sample/posts.json/data/views" />
-
-    <View
-        android:id="@+id/divider"
-        android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:layout_margin="@dimen/common_spacing"
-        android:background="@android:color/holo_red_light"
-        android:visibility="visible"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_likes" />
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 
