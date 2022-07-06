@@ -27,13 +27,19 @@ class MainActivity : AppCompatActivity() {
 //            textLikes?.text = post.likes.toString()
 //            root.setOnClickListener {
 //             //   Log.d("stuff", "stuff")
+//            println("рут")
 //            }
-            avatar.setOnClickListener {
-                //      Log.d("stuff", "avatar")
-            }
-            btnShares.setOnClickListener {
-                textShares.text = numPostfix(++post.shares)
-            }
+//            avatar.setOnClickListener {
+//                //      Log.d("stuff", "avatar")
+//                println("аватар")
+//            }
+//            btnShares.setOnClickListener {
+//                textShares.text = numPostfix(++post.shares)
+//            }
+//            btnShares.setOnClickListener{
+//                println("нопка")
+//            }
+
 
             btnLikes.setOnClickListener {
                 //  Log.d("stuff", "like")
