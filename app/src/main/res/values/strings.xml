@@ -6,4 +6,12 @@
     <string name="likes">likes</string>
     <string name="views">views</string>
     <string name="shares">shares</string>
+    <string name="post_text" translatable="false">post_text</string>
+    <string name="description_post_like" translatable="false">description_post_like</string>
+    <string name="menu_edit" translatable="false">menu_edit</string>
+    <string name="menu_remove" translatable="false">menu_remove</string>
+    <string name="error_empty_content" translatable="false">Content can\'t be empty</string>
+    <string name="edit_bar" translatable="false">edit_bar</string>
+    <string name="cancel_button" translatable="false">cancel_button</string>
+    <string name="description_post_save" translatable="false">description_post_save</string>
 </resources>
