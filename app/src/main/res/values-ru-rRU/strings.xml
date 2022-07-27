@@ -7,4 +7,9 @@
     <string name="likes">likes</string>
     <string name="views">views</string>
     <string name="shares">shares</string>
+    <string name="post_text" translatable="false">добавить запись</string>
+    <string name="menu_edit">изменить</string>
+    <string name="menu_remove">удалить</string>
+    <string name="edit_bar">отменить изменения</string>
+    <string name="error_empty_content" translatable="false">ничего не добавлено</string>
 </resources>
