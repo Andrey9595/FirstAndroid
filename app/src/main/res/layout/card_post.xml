@@ -46,17 +46,17 @@
         app:layout_constraintStart_toEndOf="@id/avatar"
         tools:text="@sample/posts.json/data/published" />
 
-    <ImageButton
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/menu"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@android:color/transparent"
-        android:contentDescription="@string/more_vertical"
-        android:minWidth="48dp"
-        android:minHeight="48dp"
+        android:minWidth="0dp"
+        android:minHeight="0dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_baseline_more_vert_24" />
+        app:icon="@drawable/ic_baseline_more_vert_24"
+        app:srcCompat="@drawable/ic_baseline_more_vert_24"
+        style="@style/Widget.AppTheme.SharesButton"/>
 
     <androidx.constraintlayout.widget.Barrier
         android:id="@+id/barrier"
@@ -92,54 +92,30 @@
         app:layout_constraintTop_toBottomOf="@id/content"
         app:constraint_referenced_ids="content" />
 
-    <ImageButton
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_likes"
-        android:layout_width="@dimen/small_icon"
-        android:layout_height="@dimen/small_icon"
-        android:layout_marginStart="@dimen/common_spacing"
-        android:layout_marginTop="@dimen/common_spacing"
-        android:background="@android:color/transparent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:contentDescription="@string/likes"
-        app:layout_constraintEnd_toStartOf="@id/text_likes"
+        android:checkable="true"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/barrierTwo"
-        app:srcCompat="@drawable/ic_like_24" />
+        app:icon="@drawable/ic_like_24"
+        app:iconTint="@color/like_checkbox_tint"
+        tools:text="@sample/posts.json/data/likes"
+        style="@style/Widget.AppTheme.LikeButton" />
 
-    <TextView
-        android:id="@+id/text_likes"
-        android:layout_width="wrap_content"
-        android:layout_height="@dimen/small_icon"
-        android:layout_marginStart="6dp"
-        android:textColor="@color/gray"
-        app:layout_constraintBottom_toBottomOf="@+id/btn_likes"
-        app:layout_constraintStart_toEndOf="@+id/btn_likes"
-        app:layout_constraintTop_toTopOf="@+id/btn_likes"
-        tools:text="@sample/posts.json/data/likes" />
-
-    <ImageButton
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_shares"
-        android:layout_width="@dimen/small_icon"
-        android:layout_height="@dimen/small_icon"
-        android:layout_marginStart="@dimen/common_spacing"
-        android:layout_marginTop="@dimen/common_spacing"
-        android:background="@android:color/transparent"
-        android:contentDescription="@string/shares"
-        app:layout_constraintEnd_toStartOf="@id/text_shares"
-        app:layout_constraintStart_toEndOf="@id/text_likes"
-        app:layout_constraintTop_toBottomOf="@id/barrierTwo"
-        app:srcCompat="@drawable/ic_share_24" />
-
-    <TextView
-        android:id="@+id/text_shares"
         android:layout_width="wrap_content"
-        android:layout_height="@dimen/small_icon"
-        android:layout_marginStart="6dp"
-        android:layout_marginBottom="4dp"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/shares"
         android:textColor="@color/gray"
-        app:layout_constraintBottom_toBottomOf="@+id/btn_shares"
-        app:layout_constraintStart_toEndOf="@+id/btn_shares"
-        app:layout_constraintTop_toTopOf="@+id/btn_shares"
-        tools:text="@sample/posts.json/data/shares" />
+        app:icon="@drawable/ic_share_24"
+        app:layout_constraintStart_toEndOf="@id/btn_likes"
+        app:layout_constraintTop_toBottomOf="@id/barrierTwo"
+        tools:text="@sample/posts.json/data/shares"
+        style="@style/Widget.AppTheme.SharesButton"/>
 
     <ImageButton
         android:id="@+id/btn_views"
