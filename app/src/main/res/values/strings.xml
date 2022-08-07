@@ -14,4 +14,7 @@
     <string name="edit_bar">edit_bar</string>
     <string name="cancel_button" translatable="false">cancel_button</string>
     <string name="description_post_save" translatable="false">description_post_save</string>
+    <string name="description_post_cancel" translatable="false">description_post_cancel</string>
+    <string name="play_video">play_video</string>
+    <string name="title_activity_intent_handler">IntentHandlerActivity</string>
 </resources>

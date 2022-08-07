@@ -1,30 +1,50 @@
 package ru.netology.nmedia.activity
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
-import android.widget.Toast
+import android.net.Uri
+import androidx.activity.result.launch
 import androidx.activity.viewModels
-import ru.netology.nmedia.R
+import com.google.android.material.snackbar.BaseTransientBottomBar.LENGTH_INDEFINITE
+import com.google.android.material.snackbar.Snackbar
 import ru.netology.nmedia.adapter.OnInteractionListener
 import ru.netology.nmedia.adapter.PostsAdapter
 import ru.netology.nmedia.databinding.ActivityMainBinding
 import ru.netology.nmedia.dto.Post
-import ru.netology.nmedia.utils.AndroidUtils
 import ru.netology.nmedia.viewmodel.PostViewModel
 import kotlinx.android.synthetic.main.activity_main.*
+import ru.netology.nmedia.R
 
 class MainActivity : AppCompatActivity() {
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
         val viewModel: PostViewModel by viewModels()
-        val adapter = PostsAdapter(object : OnInteractionListener{
+
+//        intent?.let {
+//            if (it.action != Intent.ACTION_SEND) {
+//                return@let
+//            }
+//
+//            val text = it.getStringExtra(Intent.EXTRA_TEXT)
+//            if (text.isNullOrBlank()) {
+//                Snackbar.make(binding.root, R.string.error_empty_content, LENGTH_INDEFINITE)
+//                    .setAction(android.R.string.ok) {
+//                        finish()
+//                    }
+//                    .show()
+//                return@let
+//            }
+//            // TODO: handle text
+//        }
+
+        val adapter = PostsAdapter(object : OnInteractionListener {
             override fun onEdit(post: Post) {
                 viewModel.edit(post)
-                groupCancel.visibility = View.VISIBLE
             }
 
             override fun onLike(post: Post) {
@@ -34,8 +54,22 @@ class MainActivity : AppCompatActivity() {
             override fun onRemove(post: Post) {
                 viewModel.removeById(post.id)
             }
+
+
+            override fun onPlay(post: Post) {
+                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(post.video))
+                startActivity(intent)
+            }
             override fun onShare(post: Post) {
-                viewModel.shareById(post.id)
+                val intent = Intent().apply {
+                    action = Intent.ACTION_SEND
+                    putExtra(Intent.EXTRA_TEXT, post.content)
+                    type = "text/plain"
+                }
+
+                val shareIntent =
+                    Intent.createChooser(intent, getString(R.string.shares))
+                startActivity(shareIntent)
             }
         })
 
@@ -44,43 +78,14 @@ class MainActivity : AppCompatActivity() {
             adapter.submitList(posts)
         }
 
-        viewModel.edited.observe(this) { post ->
-            if (post.id == 0L) {
-                return@observe
-            }
-            with(binding.contentEditText) {
-                requestFocus()
-                setText(post.content)
-            }
+        val newPostLauncher = registerForActivityResult(NewPostResultContract()) { result ->
+            result ?: return@registerForActivityResult
+            viewModel.changeContent(result)
+            viewModel.save()
         }
 
-        binding.saveImageButton.setOnClickListener {
-            with(binding.contentEditText) {
-                if (text.isNullOrBlank()) {
-                    Toast.makeText(
-                        this@MainActivity,
-                        context.getString(R.string.error_empty_content),
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    return@setOnClickListener
-                }
-
-                viewModel.changeContent(text.toString())
-                viewModel.save()
-                groupCancel.visibility = View.VISIBLE
-                setText("")
-                clearFocus()
-                AndroidUtils.hideKeyboard(this)
-            }
-        }
-        binding.cancelImageButton.setOnClickListener {
-            with(binding.contentEditText) {
-                groupCancel.visibility = View.VISIBLE
-                setText("")
-                clearFocus()
-                viewModel.cancelEdit()
-                AndroidUtils.hideKeyboard(this)
-            }
+        binding.fab.setOnClickListener {
+            newPostLauncher.launch()
         }
     }
 }
