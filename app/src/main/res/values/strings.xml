@@ -16,5 +16,5 @@
     <string name="description_post_save" translatable="false">description_post_save</string>
     <string name="description_post_cancel" translatable="false">description_post_cancel</string>
     <string name="play_video">play_video</string>
-    <string name="title_activity_intent_handler">IntentHandlerActivity</string>
+    <string name="title_activity_intent_handler" translatable="false">IntentHandlerActivity</string>
 </resources>
