@@ -12,17 +12,12 @@ class EditPostActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         val binding: ActivityEditPostBinding = ActivityEditPostBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-//        val post = intent.getParcelableExtra<Post>("post")
-
-    //    binding.contentEditText.setText(post?.content)
-
         binding.contentEditText.requestFocus()
         binding.ok.setOnClickListener {
             val intent = Intent()
-            if (binding.contentEditText.text.isBlank()){
+            if (binding.contentEditText.text.isBlank()) {
                 setResult(Activity.RESULT_CANCELED, intent)
-            }else{
+            } else {
                 val content = binding.contentEditText.text.toString()
                 intent.putExtra(Intent.EXTRA_TEXT, content)
                 setResult(Activity.RESULT_OK, intent)
