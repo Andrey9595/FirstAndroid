@@ -31,11 +31,10 @@ android {
         jvmTarget = '1.8'
     }
     buildFeatures.viewBinding  true
-    buildFeatures.dataBinding = true
 }
 
 dependencies {
-    implementation 'androidx.compose.ui:ui:1.0.0-beta04'
+
     def core_version = "1.8.0"
     def appcompat_version = "1.4.2"
     def mdc_version = "1.6.1"
