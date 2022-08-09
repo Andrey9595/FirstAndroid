@@ -97,7 +97,7 @@ class PostRepositoryInMemoryImpl : PostRepository {
             likedByMe = false,
             likes = 0,
             shares = 0,
-            video = "https://www.youtube.com/watch?v=1Rkn6rnsgc4"
+            video = "https://www.youtube.com/watch?v=WhWc3b3KhnY"
         ),
 
         )
