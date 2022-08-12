@@ -15,7 +15,8 @@ class PostRepositoryInMemoryImpl : PostRepository {
             published = "23 мая в 18:36",
             likedByMe = false,
             likes = 0,
-            shares = 0
+            shares = 0,
+            video = "https://www.youtube.com/watch?v=WhWc3b3KhnY"
         ),
         Post
             (
@@ -95,7 +96,8 @@ class PostRepositoryInMemoryImpl : PostRepository {
             published = "21 мая в 18:36",
             likedByMe = false,
             likes = 0,
-            shares = 0
+            shares = 0,
+            video = "https://www.youtube.com/watch?v=WhWc3b3KhnY"
         ),
 
         )

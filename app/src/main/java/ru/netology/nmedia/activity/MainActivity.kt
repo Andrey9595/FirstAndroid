@@ -1,30 +1,30 @@
 package ru.netology.nmedia.activity
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
-import android.widget.Toast
+import android.net.Uri
+import androidx.activity.result.launch
 import androidx.activity.viewModels
-import ru.netology.nmedia.R
 import ru.netology.nmedia.adapter.OnInteractionListener
 import ru.netology.nmedia.adapter.PostsAdapter
 import ru.netology.nmedia.databinding.ActivityMainBinding
 import ru.netology.nmedia.dto.Post
-import ru.netology.nmedia.utils.AndroidUtils
 import ru.netology.nmedia.viewmodel.PostViewModel
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.card_post.*
+
 
 class MainActivity : AppCompatActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
         val viewModel: PostViewModel by viewModels()
-        val adapter = PostsAdapter(object : OnInteractionListener{
+        val adapter = PostsAdapter(object : OnInteractionListener {
             override fun onEdit(post: Post) {
                 viewModel.edit(post)
-                groupCancel.visibility = View.VISIBLE
             }
 
             override fun onLike(post: Post) {
@@ -34,6 +34,12 @@ class MainActivity : AppCompatActivity() {
             override fun onRemove(post: Post) {
                 viewModel.removeById(post.id)
             }
+
+            override fun onPlay(post: Post) {
+                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(post.video))
+                startActivity(intent)
+            }
+
             override fun onShare(post: Post) {
                 viewModel.shareById(post.id)
             }
@@ -43,44 +49,26 @@ class MainActivity : AppCompatActivity() {
         viewModel.data.observe(this) { posts ->
             adapter.submitList(posts)
         }
-
-        viewModel.edited.observe(this) { post ->
+        val fixedPostLauncher = registerForActivityResult(FixPostResultContract()) { result ->
+            result ?: return@registerForActivityResult
+            viewModel.changeContent(result)
+            viewModel.save()
+        }
+        viewModel.edited.observe(this, { post ->
             if (post.id == 0L) {
                 return@observe
             }
-            with(binding.contentEditText) {
-                requestFocus()
-                setText(post.content)
-            }
+            fixedPostLauncher.launch(post) // появляется активити для редактирования старого поста
+        })
+
+        val newPostLauncher = registerForActivityResult(NewPostContract()) { result ->
+            result ?: return@registerForActivityResult
+            viewModel.changeContent(result)
+            viewModel.save()
         }
 
-        binding.saveImageButton.setOnClickListener {
-            with(binding.contentEditText) {
-                if (text.isNullOrBlank()) {
-                    Toast.makeText(
-                        this@MainActivity,
-                        context.getString(R.string.error_empty_content),
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    return@setOnClickListener
-                }
-
-                viewModel.changeContent(text.toString())
-                viewModel.save()
-                groupCancel.visibility = View.VISIBLE
-                setText("")
-                clearFocus()
-                AndroidUtils.hideKeyboard(this)
-            }
-        }
-        binding.cancelImageButton.setOnClickListener {
-            with(binding.contentEditText) {
-                groupCancel.visibility = View.VISIBLE
-                setText("")
-                clearFocus()
-                viewModel.cancelEdit()
-                AndroidUtils.hideKeyboard(this)
-            }
+        binding.fab.setOnClickListener {
+            newPostLauncher.launch() // появляется новая активити для создания поста
         }
     }
 }
