@@ -145,4 +145,7 @@ class PostRepositoryInMemoryImpl : PostRepository {
         posts = posts.filter { it.id != id }
         data.value = posts
     }
+    override fun getPost(id: Long) : Post {
+        return posts.single { it.id == id }
+    }
 }

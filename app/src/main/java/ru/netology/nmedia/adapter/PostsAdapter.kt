@@ -18,6 +18,7 @@ interface OnInteractionListener {
     fun onEdit(post: Post) {}
     fun onRemove(post: Post) {}
     fun onPlay(post: Post) {}
+    fun onOwnPost(post: Post)
 }
 
 class PostsAdapter(private val onInteractionListener: OnInteractionListener) :
