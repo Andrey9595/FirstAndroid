@@ -37,7 +37,7 @@ class FeedFragment : Fragment() {
         val adapter = PostsAdapter(object : OnInteractionListener{
             override fun onEdit(post: Post) {
                 findNavController().navigate(
-                    R.id.action_feedFragment_to_editPostFragment,
+                    R.id.action_feedFragment_to_newPostFragment,
                     Bundle().apply {
                         textArg = post.content
                     })
@@ -61,7 +61,7 @@ class FeedFragment : Fragment() {
             }
 
             override fun onOwnPost(post: Post) {
-                findNavController().navigate(R.id.action_feedFragment_to_ownPostFragment,
+                findNavController().navigate(R.id.action_feedFragment_to_postFragment,
                     Bundle().apply {
                         textArg = post.id.toString()
                     })
@@ -74,7 +74,10 @@ class FeedFragment : Fragment() {
             adapter.submitList(posts)
         }
 
-        binding.fab.setOnClickListener { findNavController().navigate(R.id.action_feedFragment_to_editPostFragment) }
+        binding.fab.setOnClickListener { findNavController().navigate(R.id.action_feedFragment_to_newPostFragment) }
+//        parentFragmentManager.beginTransaction()
+//            .replace(R.id.nav_host_fragment, PostFragment.newInstance(1.toString(), 2.toString()))
+//            .commit()
 
         return binding.root
     }

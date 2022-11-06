@@ -6,9 +6,7 @@
     tools:context=".activity.OwnPostFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="@dimen/common_spacing"
@@ -98,8 +96,6 @@
         android:textColor="#ffffff"
         android:visibility="visible"
         />
-
-
 
     <androidx.constraintlayout.widget.Barrier
         android:id="@+id/barrierTwo"

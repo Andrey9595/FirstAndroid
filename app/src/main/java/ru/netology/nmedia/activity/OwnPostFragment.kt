@@ -54,14 +54,14 @@ class OwnPostFragment: Fragment() {
                                         findNavController().navigateUp()
                                         true
                                     }
-                                    R.id.edit -> {
-                                        viewModel.edit(post)
-                                        findNavController().navigate(R.id.action_ownPostFragment_to_editPostFragment,
-                                            Bundle().apply {
-                                                textArg = post.content
-                                            })
-                                        true
-                                    }
+//                                    R.id.edit -> {
+//                                        viewModel.edit(post)
+//                                        findNavController().navigate(R.id.action_ownPostFragment_to_editPostFragment,
+//                                            Bundle().apply {
+//                                                textArg = post.content
+//                                            })
+//                                        true
+//                                    }
 
                                     else -> false
                                 }

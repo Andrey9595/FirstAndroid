@@ -9,26 +9,42 @@
         android:id="@+id/feedFragment"
         android:name="ru.netology.nmedia.activity.FeedFragment"
         android:label="fragment_feed"
-        tools:layout="@layout/fragment_feed" >
+        tools:layout="@layout/fragment_feed">
         <action
-            android:id="@+id/action_feedFragment_to_editPostFragment"
-            app:destination="@id/editPostFragment" />
+            android:id="@+id/action_feedFragment_to_newPostFragment"
+            app:destination="@id/newPostFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out" >
+            <argument
+                android:name="content"
+                app:argType="string"/>
+        </action>
         <action
-            android:id="@+id/action_feedFragment_to_ownPostFragment"
-            app:destination="@id/ownPostFragment" />
+            android:id="@+id/action_feedFragment_to_postFragment"
+            app:destination="@id/postFragment" >
+        <argument
+            android:name="postId"
+            app:argType="integer"/>
+        </action>
     </fragment>
     <fragment
-        android:id="@+id/editPostFragment"
+        android:id="@+id/newPostFragment"
         android:name="ru.netology.nmedia.activity.EditPostFragment"
-        android:label="fragment_edit_post"
-        tools:layout="@layout/fragment_edit_post" />
+        android:label="fragment_new_post"
+        tools:layout="@layout/fragment_edit_post">
+        <argument
+            android:name="content"
+            app:argType="string"/>
+    </fragment>
     <fragment
-        android:id="@+id/ownPostFragment"
-        android:name="ru.netology.nmedia.activity.OwnPostFragment"
-        android:label="fragment_own_post"
-        tools:layout="@layout/fragment_own_post" >
-        <action
-            android:id="@+id/action_ownPostFragment_to_editPostFragment"
-            app:destination="@id/editPostFragment" />
+        android:id="@+id/postFragment"
+        android:name="ru.netology.nmedia.activity.PostFragment"
+        android:label="PostFragment"
+        tools:layout="@layout/fragment_post2">
+    <argument
+        android:name="postId"
+        app:argType="integer"/>
     </fragment>
 </navigation>

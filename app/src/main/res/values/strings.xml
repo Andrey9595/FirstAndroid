@@ -17,4 +17,6 @@
     <string name="description_post_cancel" translatable="false">description_post_cancel</string>
     <string name="play_video">play_video</string>
     <string name="title_activity_intent_handler" translatable="false">IntentHandlerActivity</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
