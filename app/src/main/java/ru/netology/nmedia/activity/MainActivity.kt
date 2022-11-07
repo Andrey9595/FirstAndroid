@@ -54,12 +54,12 @@ class MainActivity : AppCompatActivity() {
             viewModel.changeContent(result)
             viewModel.save()
         }
-        viewModel.edited.observe(this, { post ->
+        viewModel.edited.observe(this) { post ->
             if (post.id == 0L) {
                 return@observe
             }
             fixedPostLauncher.launch(post) // появляется активити для редактирования старого поста
-        })
+        }
 
         val newPostLauncher = registerForActivityResult(NewPostContract()) { result ->
             result ?: return@registerForActivityResult
