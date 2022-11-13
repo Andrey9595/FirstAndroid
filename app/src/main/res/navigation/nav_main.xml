@@ -46,5 +46,11 @@
     <argument
         android:name="postId"
         app:argType="integer"/>
+        <action
+            android:id="@+id/action_postFragment_to_newPostFragment"
+            app:destination="@id/newPostFragment" />
+        <action
+            android:id="@+id/action_postFragment_to_feedFragment"
+            app:destination="@id/feedFragment" />
     </fragment>
 </navigation>
