@@ -32,6 +32,9 @@ android {
     }
     buildFeatures.viewBinding  true
     namespace 'ru.netology.nmedia'
+    lintOptions {
+        abortOnError false
+    }
 }
 
 dependencies {
