@@ -27,7 +27,7 @@ class EditPostFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         val binding = FragmentEditPostBinding.inflate(
             inflater,
             container,
@@ -38,7 +38,7 @@ class EditPostFragment : Fragment() {
         }
         binding.ok.setOnClickListener {
             val text = binding.contentEditText.text.toString()
-            if (text.isNullOrBlank()) {
+            if (text.isBlank()) {
                 Snackbar.make(binding.root, R.string.error_empty_content, LENGTH_INDEFINITE).show()
             } else {
                 viewModel.changeContent(text.trim())

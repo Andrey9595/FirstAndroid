@@ -5,7 +5,6 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import ru.netology.nmedia.dto.Post
 import ru.netology.nmedia.repository.PostRepository
-import ru.netology.nmedia.repository.PostRepositoryFileImpl
 import ru.netology.nmedia.repository.PostRepositoryInMemoryImpl
 
 private val empty = Post(

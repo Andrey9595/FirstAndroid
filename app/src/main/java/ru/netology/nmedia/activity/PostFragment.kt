@@ -27,7 +27,7 @@ class PostFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         val binding = FragmentPost2Binding.inflate(
             inflater,
             container,
@@ -45,10 +45,12 @@ class PostFragment : Fragment() {
 
             override fun onRemove(post: Post) {
                 viewModel.removeById(post.id)
+
             }
 
             override fun onLike(post: Post) {
                 viewModel.likeById(post.id)
+
             }
 
             override fun onShare(post: Post) {
@@ -116,7 +118,12 @@ class PostFragment : Fragment() {
                 }.show()
             }
 
+            viewModel.data.observe(viewLifecycleOwner) { posts ->
+                btnLikes.text = posts[0].likes.toString()
+                btnShares.text = posts[0].shares.toString()
+            }
         }
+
         return binding.root
     }
 
