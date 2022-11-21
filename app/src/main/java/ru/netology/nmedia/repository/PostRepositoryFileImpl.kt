@@ -81,4 +81,7 @@ class PostRepositoryFileImpl(
             it.write(gson.toJson(posts))
         }
     }
+    override fun getPost(id: Long) : Post {
+        return posts.single { it.id == id }
+    }
 }
