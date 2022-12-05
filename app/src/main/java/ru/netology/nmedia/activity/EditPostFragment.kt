@@ -51,6 +51,11 @@ class EditPostFragment : Fragment() {
             AndroidUtils.hideKeyboard(requireView())
             findNavController().navigateUp()
         }
+        viewModel._postCreated.observe(viewLifecycleOwner) {
+            viewModel.loodPost()
+            findNavController().navigateUp()
+        }
+
         return binding.root
     }
 }
