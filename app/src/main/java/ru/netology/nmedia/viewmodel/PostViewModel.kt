@@ -51,7 +51,7 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
                 try {
                     repository.save(it)
                     _postCreated.postValue(Unit)
-                } catch (e: IOException){
+                } catch (e: IOException) {
 //
                 }
             }
@@ -72,26 +72,21 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun likeById(id: Long) {
-        val isLike = data.value?.posts.orEmpty().filter {
-            it.id == id
-        }.none { it.likedByMe }
         thread {
-            if (isLike){
-                repository.likeById(id)
-            } else {
-                repository.likeById(id)
-            }
+            val updatedPost = repository.likeById(id)
+            val posts = _data.value?.posts.orEmpty()
+                .map { if (it.id == id) updatedPost else it }
+
+            _data.postValue(FeedModel(posts = posts))
         }
     }
 
     fun removeById(id: Long) {
         thread {
-            // Оптимистичная модель
             val old = _data.value?.posts.orEmpty()
-            _data.postValue(
-                _data.value?.copy(posts = _data.value?.posts.orEmpty()
-                    .filter { it.id != id }
-                )
+            _data.postValue(_data.value?.copy(posts = _data.value?.posts.orEmpty()
+                .filter { it.id != id }
+            )
             )
             try {
                 repository.removeById(id)
@@ -100,6 +95,7 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
             }
         }
     }
+
     fun shareById(id: Long) = repository.shareById(id)
     fun getPost(id: Long) = repository.getPost(id)
 }

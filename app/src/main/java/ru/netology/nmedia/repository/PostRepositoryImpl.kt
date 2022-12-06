@@ -37,7 +37,7 @@ class PostRepositoryImpl: PostRepository {
             } ?: emptyList()
     }
 
-    override fun likeById(id: Long) {
+    override fun likeById(id: Long) : Post {
         val request: Request = Request.Builder()
             .post(gson.toJson(id).toRequestBody(jsonType))
             .url("${BASE_URL}/api/posts/$id/likes")
@@ -45,9 +45,15 @@ class PostRepositoryImpl: PostRepository {
 
         client.newCall(request)
             .execute()
+        return client.newCall(request)
+            .execute()
+            .let { it.body?.string() ?: throw RuntimeException("body is null") }
+            .let {
+                gson.fromJson(it, Post::class.java)
+            }
     }
 
-    override fun shareById(id: Long) {
+    override fun shareById(id: Long) : Post {
         val request: Request = Request.Builder()
             .delete()
             .url("${BASE_URL}/api/posts/$id/likes")
@@ -55,6 +61,12 @@ class PostRepositoryImpl: PostRepository {
 
         client.newCall(request)
             .execute()
+        return client.newCall(request)
+            .execute()
+            .let { it.body?.string() ?: throw RuntimeException("body is null") }
+            .let {
+                gson.fromJson(it, Post::class.java)
+            }
     }
 
     override fun save(post: Post): Post {
@@ -72,13 +84,19 @@ class PostRepositoryImpl: PostRepository {
             }?: error("Empty response body")
     }
 
-    override fun removeById(id: Long) {
+    override fun removeById(id: Long) : Post {
         val request: Request = Request.Builder()
             .url("${BASE_URL}/api/slow/posts")
             .delete()
             .build()
 
         client.newCall(request).execute()
+        return client.newCall(request)
+            .execute()
+            .let { it.body?.string() ?: throw RuntimeException("body is null") }
+            .let {
+                gson.fromJson(it, Post::class.java)
+            }
     }
 
     override fun getPost(id: Long) : Post {
