@@ -22,15 +22,16 @@ import ru.netology.nmedia.databinding.FragmentFeedBinding
 class FeedFragment : Fragment() {
     private val viewModel: PostViewModel by viewModels(ownerProducer = ::requireParentFragment)
 
-    private var _binding:FragmentFeedBinding? = null
-    private val binding:FragmentFeedBinding
+    private var _binding: FragmentFeedBinding? = null
+    private val binding: FragmentFeedBinding
         get() = _binding!!
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-         _binding = FragmentFeedBinding.inflate(
+        _binding = FragmentFeedBinding.inflate(
             inflater,
             container,
             false
@@ -40,7 +41,7 @@ class FeedFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val adapter = PostsAdapter(object : OnInteractionListener{
+        val adapter = PostsAdapter(object : OnInteractionListener {
             override fun onEdit(post: Post) {
                 findNavController().navigate(
                     R.id.action_feedFragment_to_newPostFragment,
@@ -49,6 +50,7 @@ class FeedFragment : Fragment() {
                     })
                 viewModel.edit(post)
             }
+
             override fun onRemove(post: Post) {
                 viewModel.removeById(post.id)
 
@@ -57,6 +59,7 @@ class FeedFragment : Fragment() {
             override fun onLike(post: Post) {
                 viewModel.likeById(post.id)
             }
+
             override fun onShare(post: Post) {
                 viewModel.shareById(post.id)
             }
@@ -87,7 +90,7 @@ class FeedFragment : Fragment() {
 
         binding.retryButton.setOnClickListener {
             viewModel.loodPost()
-            }
+        }
 
         binding.fab.setOnClickListener { findNavController().navigate(R.id.action_feedFragment_to_newPostFragment) }
 

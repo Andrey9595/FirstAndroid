@@ -7,6 +7,7 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import ru.netology.nmedia.R
 import ru.netology.nmedia.databinding.CardPostBinding
 import ru.netology.nmedia.dto.Post
@@ -20,6 +21,8 @@ interface OnInteractionListener {
     fun onPlay(post: Post) {}
     fun onOwnPost(post: Post)
 }
+
+const val BASE_URL = "http://10.0.2.2:9999"
 
 class PostsAdapter(private val onInteractionListener: OnInteractionListener) :
     ListAdapter<Post, PostViewHolder>(PostDiffCallback()) {
@@ -40,6 +43,15 @@ class PostViewHolder(
     private val onInteractionListener: OnInteractionListener
 ) : RecyclerView.ViewHolder(binding.root) {
     fun bind(post: Post) {
+
+        Glide.with(binding.avatar)
+            .load("$BASE_URL/avatars/${post.authorAvatar}")
+            .placeholder(R.drawable.ic_loading)
+            .error(R.drawable.ic_error)
+            .circleCrop()
+            .timeout(10_000)
+            .into(binding.avatar)
+
         binding.apply {
             author.text = post.author
             published.text = post.published
@@ -48,7 +60,6 @@ class PostViewHolder(
             btnLikes.text = Utils.numPostfix(post.likes)
             btnShares.text = Utils.numPostfix(post.shares)
             playVideoView.isVisible = post.video != null
-
             menu.setOnClickListener {
                 PopupMenu(it.context, it).apply {
                     inflate(R.menu.options_post)
