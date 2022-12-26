@@ -93,7 +93,13 @@
         android:visibility="visible"
         />
 
-
+    <ImageView
+        android:id="@+id/attachImage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@+id/btn_shares"
+        tools:layout_editor_absoluteX="16dp" />
 
     <androidx.constraintlayout.widget.Barrier
         android:id="@+id/barrierTwo"

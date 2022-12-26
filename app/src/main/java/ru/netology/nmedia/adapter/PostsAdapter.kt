@@ -1,6 +1,7 @@
 package ru.netology.nmedia.adapter
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupMenu
 import androidx.core.view.isVisible
@@ -43,15 +44,11 @@ class PostViewHolder(
     private val onInteractionListener: OnInteractionListener
 ) : RecyclerView.ViewHolder(binding.root) {
     fun bind(post: Post) {
-
-        Glide.with(binding.avatar)
-            .load("$BASE_URL/avatars/${post.authorAvatar}")
-            .placeholder(R.drawable.ic_loading)
-            .error(R.drawable.ic_error)
-            .circleCrop()
-            .timeout(10_000)
-            .into(binding.avatar)
-
+        getAvatars(post, binding)
+        if (post.attachment != null) {
+            binding.attachImage.visibility = View.VISIBLE
+            getAttachment(post, binding)
+        } else binding.attachImage.visibility = View.GONE
         binding.apply {
             author.text = post.author
             published.text = post.published
@@ -93,6 +90,24 @@ class PostViewHolder(
             }
         }
     }
+
+    fun getAvatars(post: Post, binding: CardPostBinding) {
+        Glide.with(binding.avatar)
+            .load("$BASE_URL/avatars/${post.authorAvatar}")
+            .placeholder(R.drawable.ic_loading)
+            .error(R.drawable.ic_error)
+            .circleCrop()
+            .timeout(10_000)
+            .into(binding.avatar)
+    }
+
+    fun getAttachment(post: Post, binding: CardPostBinding) {
+        Glide.with(binding.attachImage)
+            .load("$BASE_URL/images/${post.attachment?.url}")
+            .error(R.drawable.ic_error)
+            .timeout(10_000)
+            .into(binding.attachImage)
+    }
 }
 
 class PostDiffCallback : DiffUtil.ItemCallback<Post>() {
@@ -103,6 +118,7 @@ class PostDiffCallback : DiffUtil.ItemCallback<Post>() {
     override fun areContentsTheSame(oldItem: Post, newItem: Post): Boolean {
         return oldItem == newItem
     }
+
 }
 
 
