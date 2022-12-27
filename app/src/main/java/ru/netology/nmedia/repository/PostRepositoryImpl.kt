@@ -81,14 +81,6 @@ class PostRepositoryImpl : PostRepository {
                 }
             })
     }
-//            .execute()
-//        return client.newCall(request)
-//            .execute()
-//            .let { it.body?.string() ?: throw RuntimeException("body is null") }
-//            .let {
-//                gson.fromJson(it, Post::class.java)
-//            }
-//    }
 
     override fun shareById(id: Long): Post {
         val request: Request = Request.Builder()
@@ -129,20 +121,6 @@ class PostRepositoryImpl : PostRepository {
 
             })
     }
-//    }(post: Post): Post {
-//        val request: Request = Request.Builder()
-//            .post(gson.toJson(post).toRequestBody(jsonType))
-//            .url("${BASE_URL}/api/slow/posts")
-//            .build()
-//
-//        return client.newCall(request)
-//            .execute()
-//            .let {
-//                it.body?.string()
-//            }?.let {
-//                gson.fromJson(it, Post::class.java)
-//            } ?: error("Empty response body")
-//    }
 
     override fun removeByIdAsync(id: Long, callback: PostRepository.GetAllCallback) {
         val request: Request = Request.Builder()
@@ -168,20 +146,6 @@ class PostRepositoryImpl : PostRepository {
             })
 
     }
-//    (id: Long): Post {
-//        val request: Request = Request.Builder()
-//            .url("${BASE_URL}/api/slow/posts")
-//            .delete()
-//            .build()
-//
-//        client.newCall(request).execute()
-//        return client.newCall(request)
-//            .execute()
-//            .let { it.body?.string() ?: throw RuntimeException("body is null") }
-//            .let {
-//                gson.fromJson(it, Post::class.java)
-//            }
-//    }
 
     override fun getPost(id: Long): Post {
         val request: Request = Request.Builder()

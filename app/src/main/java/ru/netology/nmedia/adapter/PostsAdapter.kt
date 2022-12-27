@@ -1,12 +1,14 @@
 package ru.netology.nmedia.adapter
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupMenu
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import ru.netology.nmedia.R
 import ru.netology.nmedia.databinding.CardPostBinding
 import ru.netology.nmedia.dto.Post
@@ -20,6 +22,8 @@ interface OnInteractionListener {
     fun onPlay(post: Post) {}
     fun onOwnPost(post: Post)
 }
+
+const val BASE_URL = "http://10.0.2.2:9999"
 
 class PostsAdapter(private val onInteractionListener: OnInteractionListener) :
     ListAdapter<Post, PostViewHolder>(PostDiffCallback()) {
@@ -40,6 +44,11 @@ class PostViewHolder(
     private val onInteractionListener: OnInteractionListener
 ) : RecyclerView.ViewHolder(binding.root) {
     fun bind(post: Post) {
+        getAvatars(post, binding)
+        if (post.attachment != null) {
+            binding.attachImage.visibility = View.VISIBLE
+            getAttachment(post, binding)
+        } else binding.attachImage.visibility = View.GONE
         binding.apply {
             author.text = post.author
             published.text = post.published
@@ -48,7 +57,6 @@ class PostViewHolder(
             btnLikes.text = Utils.numPostfix(post.likes)
             btnShares.text = Utils.numPostfix(post.shares)
             playVideoView.isVisible = post.video != null
-
             menu.setOnClickListener {
                 PopupMenu(it.context, it).apply {
                     inflate(R.menu.options_post)
@@ -82,6 +90,24 @@ class PostViewHolder(
             }
         }
     }
+
+    fun getAvatars(post: Post, binding: CardPostBinding) {
+        Glide.with(binding.avatar)
+            .load("$BASE_URL/avatars/${post.authorAvatar}")
+            .placeholder(R.drawable.ic_loading)
+            .error(R.drawable.ic_error)
+            .circleCrop()
+            .timeout(10_000)
+            .into(binding.avatar)
+    }
+
+    fun getAttachment(post: Post, binding: CardPostBinding) {
+        Glide.with(binding.attachImage)
+            .load("$BASE_URL/images/${post.attachment?.url}")
+            .error(R.drawable.ic_error)
+            .timeout(10_000)
+            .into(binding.attachImage)
+    }
 }
 
 class PostDiffCallback : DiffUtil.ItemCallback<Post>() {
@@ -92,6 +118,7 @@ class PostDiffCallback : DiffUtil.ItemCallback<Post>() {
     override fun areContentsTheSame(oldItem: Post, newItem: Post): Boolean {
         return oldItem == newItem
     }
+
 }
 
 
