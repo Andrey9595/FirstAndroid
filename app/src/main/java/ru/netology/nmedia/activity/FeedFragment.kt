@@ -61,7 +61,7 @@ class FeedFragment : Fragment() {
             }
 
             override fun onShare(post: Post) {
-                viewModel.shareById(post.id)
+//                viewModel.shareById(post.id)
             }
 
             override fun onPlay(post: Post) {
@@ -81,7 +81,7 @@ class FeedFragment : Fragment() {
 
 
         binding.list.adapter = adapter
-        viewModel.data.observe(viewLifecycleOwner) { state ->
+        viewModel.postCreated.observe(viewLifecycleOwner) { state ->
             adapter.submitList(state.posts)
             binding.progress.isVisible = state.loading
             binding.errorGroup.isVisible = state.error

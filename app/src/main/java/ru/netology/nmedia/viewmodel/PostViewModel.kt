@@ -22,7 +22,9 @@ private val empty = Post(
 class PostViewModel(application: Application) : AndroidViewModel(application) {
     private val repository: PostRepository = PostRepositoryImpl()
     private val _data = MutableLiveData(FeedModel())
-    val data: LiveData<FeedModel>
+    private val edited = MutableLiveData(empty)
+    val _postCreated = SingleLiveEvent<Unit>()
+    val postCreated: LiveData<FeedModel>
         get() = _data
 
     init {
@@ -31,29 +33,31 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
 
     fun loodPost() {
         _data.value = FeedModel(loading = true)
-        repository.getAllAsync(object : PostRepository.GetAllCallback {
+        repository.getAllAsync(object : PostRepository.Callback<List<Post>> {
             override fun onSuccess(posts: List<Post>) {
-                _data.postValue(FeedModel(posts = posts, empty = posts.isEmpty()))
+                _data.value = (FeedModel(posts = posts, empty = posts.isEmpty()))
+                println("success")
             }
 
             override fun onError(e: Exception) {
-                _data.postValue(FeedModel(error = true))
+                _data.value =FeedModel(error = true)
+                println("error")
             }
-        })
+        }, getApplication())
     }
 
-    val edited = MutableLiveData(empty)
-    val _postCreated = SingleLiveEvent<Unit>()
-
     fun save() {
+        var oldPosts = _data.value?.posts.orEmpty()
         edited.value?.let {
-            repository.saveAsync(it, object : PostRepository.GetAllCallback {
-                override fun onSuccess(posts: List<Post>) {
-                    _postCreated.postValue(Unit)
+            repository.save(it, object : PostRepository.Callback<Post> {
+                override fun onSuccess(posts: Post) {
+                    oldPosts = listOf(posts)+oldPosts
+                    _data.postValue(FeedModel(posts = oldPosts))
+                    _postCreated.value = Unit
                 }
 
                 override fun onError(e: Exception) {
-                    _data.postValue(FeedModel(error = true))
+                    _data.value =FeedModel(error = true)
                 }
 
             })
@@ -74,26 +78,26 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
 
     fun likeById(id: Long) {
         var updatedPost = _data.value?.posts.orEmpty()
-        repository.likeByIdAsync(id, object : PostRepository.GetAllCallback {
-            override fun onSuccess(posts: List<Post>) {
+        repository.likedById(id, object : PostRepository.Callback<Post> {
+            override fun onSuccess(posts: Post) {
                 updatedPost = updatedPost.map { post ->
                     if (post.id != id) post else post.copy(
                         likedByMe = post.likedByMe,
                         likes = post.likes
                     )
                 }
-                _data.postValue(FeedModel(posts = updatedPost))
+                _data.value = FeedModel(posts = updatedPost)
             }
 
             override fun onError(e: Exception) {
-                _data.postValue(FeedModel(error = true))
+                _data.value = FeedModel(error = true)
             }
         })
     }
 
     fun removeById(id: Long) {
-        repository.removeByIdAsync(id, object : PostRepository.GetAllCallback {
-            override fun onSuccess(posts: List<Post>) {
+        repository.removeById(id, object : PostRepository.RemCallback {
+            override fun onSuccess() {
                 _data.postValue(
                     _data.value?.copy(posts = _data.value?.posts.orEmpty()
                         .filter { it.id != id }
@@ -102,11 +106,9 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
             }
 
             override fun onError(e: Exception) {
-                _data.postValue(FeedModel(error = true))
+                _data.value = FeedModel(error = true)
             }
         })
     }
-
-    fun shareById(id: Long) = repository.shareById(id)
     fun getPost(id: Long) = repository.getPost(id)
 }
