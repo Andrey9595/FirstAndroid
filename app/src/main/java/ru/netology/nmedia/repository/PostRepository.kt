@@ -2,23 +2,21 @@ package ru.netology.nmedia.repository
 
 
 import android.content.Context
+import ru.netology.nmedia.api.ApiError
 import ru.netology.nmedia.dto.Post
 
 interface PostRepository {
 
-    fun getAllAsync(callback: Callback<List<Post>>, context: Context)
+    fun getAllAsync(callback: Callback<List<Post>>)
     fun save(post: Post, callback: Callback<Post>)
-    fun removeById(id: Long, callback: RemCallback)
-    fun likedById(id: Long, callback: Callback<Post>)
+    fun removeById(id: Long, callback: Callback<Unit>)
+    fun likeById(id: Long, callback: Callback<Post>)
+    fun dislikeById(id: Long, callback: Callback<Post>)
     fun getPost(id: Long): Post
 
     interface Callback<T> {
         fun onSuccess(posts: T) {}
-        fun onError(e: Exception) {}
+        fun onError(e: ApiError) {}
     }
 
-    interface RemCallback {
-        fun onSuccess()
-        fun onError(e: Exception) {}
-    }
 }

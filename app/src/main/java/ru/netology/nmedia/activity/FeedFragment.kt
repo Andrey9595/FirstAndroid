@@ -16,6 +16,7 @@ import ru.netology.nmedia.dto.Post
 import ru.netology.nmedia.viewmodel.PostViewModel
 import ru.netology.nmedia.R
 import ru.netology.nmedia.activity.EditPostFragment.Companion.textArg
+import ru.netology.nmedia.api.getHumanReadableMessage
 import ru.netology.nmedia.databinding.FragmentFeedBinding
 
 
@@ -81,10 +82,11 @@ class FeedFragment : Fragment() {
 
 
         binding.list.adapter = adapter
-        viewModel.postCreated.observe(viewLifecycleOwner) { state ->
+        viewModel.data.observe(viewLifecycleOwner) { state ->
             adapter.submitList(state.posts)
             binding.progress.isVisible = state.loading
-            binding.errorGroup.isVisible = state.error
+            binding.errorGroup.isVisible = state.errorVisible
+            binding.retryTitle.text = state.error.getHumanReadableMessage(resources)
             binding.emptyText.isVisible = state.empty
         }
 

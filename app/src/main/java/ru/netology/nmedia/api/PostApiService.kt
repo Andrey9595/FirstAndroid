@@ -49,6 +49,9 @@ interface PostApiService {
     @POST("posts/{id}/likes")
     fun likeById(@Path("id") id: Long): Call<Post>
 
+    @DELETE("posts/{id}/likes")
+    fun dislikeById(@Path("id") id: Long): Call<Post>
+
 }
 
 object PostApiServiceHolder {
