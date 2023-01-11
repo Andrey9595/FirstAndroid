@@ -4,12 +4,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.BaseTransientBottomBar.LENGTH_INDEFINITE
 import com.google.android.material.snackbar.Snackbar
 import ru.netology.nmedia.R
+import ru.netology.nmedia.api.getHumanReadableMessage
 import ru.netology.nmedia.databinding.FragmentEditPostBinding
 import ru.netology.nmedia.utils.AndroidUtils
 import ru.netology.nmedia.utils.StringArg
@@ -51,11 +53,14 @@ class EditPostFragment : Fragment() {
             AndroidUtils.hideKeyboard(requireView())
             findNavController().navigateUp()
         }
-        viewModel._postCreated.observe(viewLifecycleOwner) {
+        viewModel.postCreated.observe(viewLifecycleOwner) {
             viewModel.loodPost()
             findNavController().navigateUp()
         }
 
+        viewModel.postCreateError.observe(viewLifecycleOwner) {
+            Toast.makeText(requireContext(), it.getHumanReadableMessage(resources), Toast.LENGTH_LONG).show()
+        }
         return binding.root
     }
 }
