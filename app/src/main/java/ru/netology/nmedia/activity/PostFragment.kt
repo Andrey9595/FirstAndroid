@@ -130,59 +130,59 @@ class PostFragment : Fragment() {
 //
 //        return binding.root
 //    }
-    companion object {
-        var Bundle.textArg: String? by StringArg
-    }
-
-    private val viewModel: PostViewModel by viewModels(ownerProducer = ::requireParentFragment)
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?,
-    ): View? {
-        val binding = FragmentPost2Binding.inflate(
-            inflater,
-            container,
-            false
-        )
-        val postId = arguments?.textArg?.toLong()
-        if (postId != null) {
-            viewModel.getPost(postId).let { post ->
-                binding.apply {
-                    author.text = post.author
-                    published.text = post.published
-                    content.text = post.content
-                    btn_likes.isChecked = post.likedByMe
-                    btn_likes.text = Utils.numPostfix(post.likes)
-                    btn_shares.text = Utils.numPostfix(post.shares)
-                    playVideoView.isVisible = post.video != null
-
-                    menu.setOnClickListener {
-                        PopupMenu(it.context, it).apply {
-                            inflate(R.menu.options_post)
-                            setOnMenuItemClickListener { item ->
-                                when (item.itemId) {
-                                    R.id.remove -> {
-                                        viewModel.removeById(post.id)
-                                        findNavController().navigateUp()
-                                        true
-                                    }
-                                    R.id.edit -> {
-                                        viewModel.edit(post)
-                                        findNavController().navigate(R.id.action_feedFragment_to_newPostFragment,
-                                            Bundle().apply {
-                                                textArg = post.content
-                                            })
-                                        true
-                                    }
-                                    else -> false
-                                }
-                            }
-                        }.show()
-                    }
-                }
-            }
-        }
-        return binding.root
-    }
+//    companion object {
+//        var Bundle.textArg: String? by StringArg
+//    }
+//
+//    private val viewModel: PostViewModel by viewModels(ownerProducer = ::requireParentFragment)
+//    override fun onCreateView(
+//        inflater: LayoutInflater,
+//        container: ViewGroup?,
+//        savedInstanceState: Bundle?,
+//    ): View? {
+//        val binding = FragmentPost2Binding.inflate(
+//            inflater,
+//            container,
+//            false
+//        )
+//        val postId = arguments?.textArg?.toLong()
+//        if (postId != null) {
+//            viewModel.getPost(postId).let { post ->
+//                binding.apply {
+//                    author.text = post.author
+//                    published.text = post.published
+//                    content.text = post.content
+//                    btn_likes.isChecked = post.likedByMe
+//                    btn_likes.text = Utils.numPostfix(post.likes)
+//                    btn_shares.text = Utils.numPostfix(post.shares)
+//                    playVideoView.isVisible = post.video != null
+//
+//                    menu.setOnClickListener {
+//                        PopupMenu(it.context, it).apply {
+//                            inflate(R.menu.options_post)
+//                            setOnMenuItemClickListener { item ->
+//                                when (item.itemId) {
+//                                    R.id.remove -> {
+//                                        viewModel.removeById(post.id)
+//                                        findNavController().navigateUp()
+//                                        true
+//                                    }
+//                                    R.id.edit -> {
+//                                        viewModel.edit(post)
+//                                        findNavController().navigate(R.id.action_feedFragment_to_newPostFragment,
+//                                            Bundle().apply {
+//                                                textArg = post.content
+//                                            })
+//                                        true
+//                                    }
+//                                    else -> false
+//                                }
+//                            }
+//                        }.show()
+//                    }
+//                }
+//            }
+//        }
+//        return binding.root
+//    }
 }

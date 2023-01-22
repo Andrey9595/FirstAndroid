@@ -45,10 +45,20 @@ class PostViewHolder(
 ) : RecyclerView.ViewHolder(binding.root) {
     fun bind(post: Post) {
         getAvatars(post, binding)
-        if (post.attachment != null) {
-            binding.attachImage.visibility = View.VISIBLE
-            getAttachment(post, binding)
-        } else binding.attachImage.visibility = View.GONE
+//        if (post.attachment != null) {
+//            binding.attachImage.visibility = View.VISIBLE
+//            getAttachment(post, binding)
+//        } else binding.attachImage.visibility = View.GONE
+        if (!post.savedOnServer){
+            binding.btnLikes.visibility = View.INVISIBLE
+            binding.btnShares.visibility = View.INVISIBLE
+        } else {
+            binding.btnLikes.visibility = View.VISIBLE
+            binding.btnShares.visibility = View.VISIBLE
+        }
+        if (post.savedOnServer){
+            binding.savedOnServer.setImageResource(R.drawable.ic_baseline_public_24)
+        } else binding.savedOnServer.setImageResource(R.drawable.ic_baseline_public_off_24)
         binding.apply {
             author.text = post.author
             published.text = post.published
@@ -101,13 +111,13 @@ class PostViewHolder(
             .into(binding.avatar)
     }
 
-    fun getAttachment(post: Post, binding: CardPostBinding) {
-        Glide.with(binding.attachImage)
-            .load("$BASE_URL/images/${post.attachment?.url}")
-            .error(R.drawable.ic_error)
-            .timeout(10_000)
-            .into(binding.attachImage)
-    }
+//    fun getAttachment(post: Post, binding: CardPostBinding) {
+//        Glide.with(binding.attachImage)
+//            .load("$BASE_URL/images/${post.attachment?.url}")
+//            .error(R.drawable.ic_error)
+//            .timeout(10_000)
+//            .into(binding.attachImage)
+//    }
 }
 
 class PostDiffCallback : DiffUtil.ItemCallback<Post>() {
