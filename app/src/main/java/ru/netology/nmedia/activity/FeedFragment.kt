@@ -10,13 +10,13 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.snackbar.Snackbar
 import ru.netology.nmedia.adapter.OnInteractionListener
 import ru.netology.nmedia.adapter.PostsAdapter
 import ru.netology.nmedia.dto.Post
 import ru.netology.nmedia.viewmodel.PostViewModel
 import ru.netology.nmedia.R
 import ru.netology.nmedia.activity.EditPostFragment.Companion.textArg
-import ru.netology.nmedia.api.getHumanReadableMessage
 import ru.netology.nmedia.databinding.FragmentFeedBinding
 
 
@@ -76,22 +76,32 @@ class FeedFragment : Fragment() {
                     Bundle().apply {
                         textArg = post.id.toString()
                     })
-                viewModel.loodPost()
+                viewModel.loadPosts()
             }
         })
 
 
         binding.list.adapter = adapter
         viewModel.data.observe(viewLifecycleOwner) { state ->
-            adapter.submitList(state.posts)
+            val newPost = state.posts.size > adapter.currentList.size
+            adapter.submitList(state.posts) {
+                if (newPost) binding.list.smoothScrollToPosition(0)
+            }
+        }
+        viewModel.dataState.observe(viewLifecycleOwner){ state ->
             binding.progress.isVisible = state.loading
-            binding.errorGroup.isVisible = state.errorVisible
-            binding.retryTitle.text = state.error.getHumanReadableMessage(resources)
-            binding.emptyText.isVisible = state.empty
+            if (state.error){
+                Snackbar.make(binding.root, R.string.error_loading, Snackbar.LENGTH_LONG).setAction(R.string.retry_loading){
+                    viewModel.refresh()
+                }
+                    .show()
+            }
+            binding.errorGroup.isVisible = state.error
         }
 
+
         binding.retryButton.setOnClickListener {
-            viewModel.loodPost()
+            viewModel.loadPosts()
         }
 
         binding.fab.setOnClickListener { findNavController().navigate(R.id.action_feedFragment_to_newPostFragment) }
