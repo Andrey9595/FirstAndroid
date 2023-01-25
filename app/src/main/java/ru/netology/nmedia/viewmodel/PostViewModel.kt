@@ -2,6 +2,9 @@ package ru.netology.nmedia.viewmodel
 
 import android.app.Application
 import androidx.lifecycle.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import ru.netology.nmedia.db.AppDb
 import ru.netology.nmedia.dto.Post
@@ -18,30 +21,31 @@ private val empty = Post(
     authorAvatar = "",
     likedByMe = false,
     published = "",
-    savedOnServer = false
+    toShow = false
+//    savedOnServer = false
 )
 
 class PostViewModel(application: Application) : AndroidViewModel(application) {
-    //    private val repository: PostRepository = PostRepositoryImpl()
-//    private val _data = MutableLiveData(FeedModel())
+
     private val edited = MutableLiveData(empty)
     val _postCreated = SingleLiveEvent<Unit>()
 
-    //    val data: LiveData<FeedModel>
-//        get() = _data
     val postCreated: LiveData<Unit>
         get() = _postCreated
 
-    //    private val _postCreateError = SingleLiveEvent<ApiError>()
-//    val postCreateError: LiveData<ApiError>
-//    get() = _postCreateError
     private val repository: PostRepository =
         PostRepositoryImpl(AppDb.getInstance(context = application).postDao())
-    val data: LiveData<FeedModel> = repository.data.map(::FeedModel)
+    val data: LiveData<FeedModel> = repository.data
+        .map(:: FeedModel)
+        .asLiveData(Dispatchers.Default)
     private val _dataState = MutableLiveData<FeedModelState>(FeedModelState(idle = true))
     val dataState: LiveData<FeedModelState>
         get() = _dataState
-
+    val newerCount: LiveData<Int> = data.switchMap {
+        repository.getNewerCount(it.posts.firstOrNull()?.id ?: 0L)
+            .catch { e -> e.printStackTrace() }
+            .asLiveData(Dispatchers.Default)
+    }
 
     init {
         loadPosts()
@@ -115,6 +119,12 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
             } catch (e: Exception) {
                 _dataState.value = FeedModelState(error = true)
             }
+        }
+    }
+
+    fun updateShownStatus(){
+        viewModelScope.launch {
+            repository.updateShownStatus()
         }
     }
 

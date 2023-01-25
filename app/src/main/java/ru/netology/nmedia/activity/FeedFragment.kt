@@ -98,7 +98,22 @@ class FeedFragment : Fragment() {
             }
             binding.errorGroup.isVisible = state.error
         }
+        viewModel.newerCount.observe(viewLifecycleOwner) { state ->
 
+            if (state != 0){
+                val btnText = "Новая запись ($state)"
+                binding.newerPostsBtn.text = btnText
+                binding.newerPostsBtn.visibility = View.VISIBLE
+            }
+
+            println("state: $state")
+        }
+
+        binding.newerPostsBtn.setOnClickListener {
+            viewModel.loadPosts()
+            viewModel.updateShownStatus()
+            it.visibility = View.GONE
+        }
 
         binding.retryButton.setOnClickListener {
             viewModel.loadPosts()

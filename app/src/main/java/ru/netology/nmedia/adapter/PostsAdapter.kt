@@ -49,16 +49,16 @@ class PostViewHolder(
 //            binding.attachImage.visibility = View.VISIBLE
 //            getAttachment(post, binding)
 //        } else binding.attachImage.visibility = View.GONE
-        if (!post.savedOnServer){
-            binding.btnLikes.visibility = View.INVISIBLE
-            binding.btnShares.visibility = View.INVISIBLE
-        } else {
-            binding.btnLikes.visibility = View.VISIBLE
-            binding.btnShares.visibility = View.VISIBLE
-        }
-        if (post.savedOnServer){
-            binding.savedOnServer.setImageResource(R.drawable.ic_baseline_public_24)
-        } else binding.savedOnServer.setImageResource(R.drawable.ic_baseline_public_off_24)
+//        if (!post.savedOnServer){
+//            binding.btnLikes.visibility = View.INVISIBLE
+//            binding.btnShares.visibility = View.INVISIBLE
+//        } else {
+//            binding.btnLikes.visibility = View.VISIBLE
+//            binding.btnShares.visibility = View.VISIBLE
+//        }
+//        if (post.savedOnServer){
+//            binding.savedOnServer.setImageResource(R.drawable.ic_baseline_public_24)
+//        } else binding.savedOnServer.setImageResource(R.drawable.ic_baseline_public_off_24)
         binding.apply {
             author.text = post.author
             published.text = post.published

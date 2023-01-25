@@ -1,8 +1,7 @@
 package ru.netology.nmedia.api
 
-import android.content.res.Resources
-import ru.netology.nmedia.R
-import java.net.ConnectException
+import java.io.IOException
+import java.sql.SQLException
 
 //sealed class ApiError {
 //    object ServerError : ApiError()
@@ -27,7 +26,16 @@ import java.net.ConnectException
 //        ApiError.UnknownError, null -> resources.getString(R.string.unknown_error)
 //    }
 sealed class AppError(var code: String): RuntimeException() {
-    class ApiError(val status: Int, code: String) : AppError(code)
+    companion object {
+        fun from(e: Throwable): AppError = when(e){
+            is AppError -> e
+            is SQLException -> DbError
+            is IOException -> NetworkError
+            else -> UnknownError
+        }
+    }
+}
+class ApiError(val status: Int, code: String) : AppError(code)
     object NetworkError : AppError("error_network")
     object UnknownError : AppError("error_unknown")
-}
+    object DbError : AppError("error_db")
