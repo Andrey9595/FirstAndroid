@@ -22,13 +22,12 @@ private val empty = Post(
     likedByMe = false,
     published = "",
     toShow = false
-//    savedOnServer = false
 )
 
 class PostViewModel(application: Application) : AndroidViewModel(application) {
 
     private val edited = MutableLiveData(empty)
-    val _postCreated = SingleLiveEvent<Unit>()
+    private val _postCreated = SingleLiveEvent<Unit>()
 
     val postCreated: LiveData<Unit>
         get() = _postCreated
@@ -36,7 +35,7 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
     private val repository: PostRepository =
         PostRepositoryImpl(AppDb.getInstance(context = application).postDao())
     val data: LiveData<FeedModel> = repository.data
-        .map(:: FeedModel)
+        .map(::FeedModel)
         .asLiveData(Dispatchers.Default)
     private val _dataState = MutableLiveData<FeedModelState>(FeedModelState(idle = true))
     val dataState: LiveData<FeedModelState>
@@ -122,7 +121,7 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    fun updateShownStatus(){
+    fun updateShownStatus() {
         viewModelScope.launch {
             repository.updateShownStatus()
         }

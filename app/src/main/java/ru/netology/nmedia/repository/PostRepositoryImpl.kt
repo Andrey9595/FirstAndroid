@@ -129,7 +129,7 @@ class PostRepositoryImpl(private val dao: PostDao) : PostRepository {
     }
 
     override suspend fun updateShownStatus() {
-        TODO("Not yet implemented")
+        dao.updateShownStatus()
     }
 
 }

@@ -110,13 +110,12 @@ class FeedFragment : Fragment() {
         }
 
         binding.newerPostsBtn.setOnClickListener {
-            viewModel.loadPosts()
+//            viewModel.loadPosts()
             viewModel.updateShownStatus()
             it.visibility = View.GONE
         }
 
         binding.retryButton.setOnClickListener {
-            viewModel.loadPosts()
         }
 
         binding.fab.setOnClickListener { findNavController().navigate(R.id.action_feedFragment_to_newPostFragment) }
