@@ -16,14 +16,15 @@ data class PostEntity(
     var likes: Int = 0,
     var shares: Int = 0,
     val video: String? = null,
-    val savedOnServer: Boolean
+    val toShow: Boolean
+//    val savedOnServer: Boolean
 ) {
-    fun toDto(): Post = Post(id, author, authorAvatar, content, published, likes, shares, likedByMe, video, savedOnServer)
+    fun toDto(): Post = Post(id, author, authorAvatar, content, published, likes, shares, likedByMe, video, toShow)
 
     companion object {
         fun fromDto(post: Post): PostEntity =
             with(post) {
-                PostEntity(id, author, authorAvatar, content, published, likedByMe, likes, shares, video, savedOnServer)
+                PostEntity(id, author, authorAvatar, content, published, likedByMe, likes, shares, video, toShow)
             }
     }
 

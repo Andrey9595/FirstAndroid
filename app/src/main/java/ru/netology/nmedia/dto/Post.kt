@@ -10,8 +10,9 @@ data class Post(
     var shares: Int = 0,
     val likedByMe: Boolean = false,
     val video: String? = null,
+    var toShow: Boolean
 //    var attachment: Attachment? = null,
-    var savedOnServer: Boolean = false
+//    var savedOnServer: Boolean = false
 )
 
 data class Attachment(
