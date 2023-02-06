@@ -20,6 +20,7 @@
             <argument
                 android:name="content"
                 app:argType="string"/>
+
         </action>
         <action
             android:id="@+id/action_feedFragment_to_postFragment"
@@ -27,6 +28,15 @@
         <argument
             android:name="postId"
             app:argType="integer"/>
+        </action>
+        <action
+            android:id="@+id/action_feedFragment_to_photoFragment2"
+            app:destination="@id/photoFragment">
+            <argument
+                android:name="imageArg"
+                app:argType="string"
+                />
+
         </action>
     </fragment>
     <fragment
@@ -53,4 +63,15 @@
             android:id="@+id/action_postFragment_to_feedFragment"
             app:destination="@id/feedFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/photoFragment"
+        android:name="ru.netology.nmedia.activity.PhotoFragment"
+        android:label="fragment_photo"
+        tools:layout="@layout/fragment_photo">
+    <argument
+        android:name="imageArg"
+        app:argType="string"
+        />
+    </fragment>
+
 </navigation>

@@ -65,6 +65,11 @@ class FeedFragment : Fragment() {
 //                viewModel.shareById(post.id)
             }
 
+            override fun onImage(post: Post) {
+                val action = FeedFragmentDirections.actionFeedFragmentToPhotoFragment2(post.attachment?.url.toString())
+                findNavController().navigate(action)
+            }
+
             override fun onPlay(post: Post) {
                 val intent = Intent(Intent.ACTION_VIEW, Uri.parse(post.video))
                 startActivity(intent)
@@ -90,6 +95,7 @@ class FeedFragment : Fragment() {
         }
         viewModel.dataState.observe(viewLifecycleOwner){ state ->
             binding.progress.isVisible = state.loading
+//            binding.swiprefresh.isRefreshing = state.refreshing
             if (state.error){
                 Snackbar.make(binding.root, R.string.error_loading, Snackbar.LENGTH_LONG).setAction(R.string.retry_loading){
                     viewModel.refresh()
