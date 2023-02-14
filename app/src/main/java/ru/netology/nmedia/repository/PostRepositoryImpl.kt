@@ -149,6 +149,11 @@ class PostRepositoryImpl(private val dao: PostDao) : PostRepository {
             throw UnknownError
         }
     }
+
+    override suspend fun authentication(login: String, password: String) {
+        TODO("Not yet implemented")
+    }
+
     private suspend fun uploadFile(upload: MediaUpload): Media {
         try {
             val part = MultipartBody.Part.createFormData(

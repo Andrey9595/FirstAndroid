@@ -8,6 +8,7 @@ import ru.netology.nmedia.enumeration.AttachmentType
 @Parcelize
 data class Post(
     val id: Long,
+    val authorId: Long,
     val author: String,
     val authorAvatar: String,
     val content: String,
@@ -18,6 +19,7 @@ data class Post(
     val video: String? = null,
     var toShow: Boolean,
     var attachment: @RawValue Attachment? = null,
+    val ownedByMe: Boolean = false,
 //    var savedOnServer: Boolean = false
 ) : Parcelable
 
