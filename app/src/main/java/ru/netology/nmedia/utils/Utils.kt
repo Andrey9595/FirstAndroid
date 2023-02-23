@@ -1,7 +1,7 @@
 package ru.netology.nmedia.utils
 
 class Utils {
-    companion object{
+    companion object {
         fun numPostfix(num: Int): String = when (num) {
             in 0..999 -> num.toString()
             in 1_000..9_999 -> if (num.toString()[1] == '0') "${num.toString()[0]}K" else "${num.toString()[0]},${num.toString()[1]}K"

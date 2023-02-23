@@ -9,8 +9,6 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import ru.netology.nmedia.databinding.FragmentAuthBinding
-import ru.netology.nmedia.utils.Utils
-import ru.netology.nmedia.viewmodel.AuthViewModel
 import ru.netology.nmedia.viewmodel.RegistrationViewModel
 
 class AuthFragment : Fragment() {
@@ -29,10 +27,6 @@ class AuthFragment : Fragment() {
         )
 
         binding.enterBtnView.setOnClickListener {
-//            val  login = binding.loginView.text.trim().toString()
-//            val password = binding.passwordView.text.trim().toString()
-//            viewModel.authentication(login, password)
-//            findNavController().navigateUp()
             if (binding.loginView.text.isNotEmpty() &&
                 binding.passwordView.text.isNotEmpty()
             ) {
@@ -43,10 +37,11 @@ class AuthFragment : Fragment() {
             } else Snackbar.make(binding.root, "Заполните все поля", Snackbar.LENGTH_LONG).show()
         }
         viewModel.tokenReceived.observe(viewLifecycleOwner) {
-            if (it == 0){
+            if (it == 0) {
                 findNavController().navigateUp()
             } else {
-                Snackbar.make(binding.root, "Неверный пароль или логин", Snackbar.LENGTH_LONG).show()
+                Snackbar.make(binding.root, "Неверный пароль или логин", Snackbar.LENGTH_LONG)
+                    .show()
             }
         }
         return binding.root

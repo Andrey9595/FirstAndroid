@@ -20,11 +20,9 @@ data class Post(
     var toShow: Boolean,
     var attachment: @RawValue Attachment? = null,
     val ownedByMe: Boolean = false,
-//    var savedOnServer: Boolean = false
 ) : Parcelable
 
 data class Attachment(
     val url: String,
-//    val description: String?,
     val type: AttachmentType
 )

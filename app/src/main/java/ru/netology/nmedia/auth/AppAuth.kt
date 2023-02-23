@@ -1,11 +1,9 @@
 package ru.netology.nmedia.auth
 
 import android.content.Context
-import androidx.core.content.edit
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import ru.netology.nmedia.dto.Token
 
 class AppAuth private constructor(context: Context) {
     private val prefs = context.getSharedPreferences("auth", Context.MODE_PRIVATE)
@@ -56,10 +54,10 @@ class AppAuth private constructor(context: Context) {
 
         fun getInstance(): AppAuth =
             synchronized(this) {
-            instance ?: throw IllegalStateException(
-                "AppAuth is not initialized, you must call AppAuth.initializeApp(Context context) first."
-            )
-        }
+                instance ?: throw IllegalStateException(
+                    "AppAuth is not initialized, you must call AppAuth.initializeApp(Context context) first."
+                )
+            }
 
         fun initApp(context: Context): AppAuth = instance ?: synchronized(this) {
             instance ?: buildAuth(context).also { instance = it }

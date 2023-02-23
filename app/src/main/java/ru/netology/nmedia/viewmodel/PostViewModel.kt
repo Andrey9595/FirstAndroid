@@ -44,22 +44,19 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
 
     private val repository: PostRepository =
         PostRepositoryImpl(AppDb.getInstance(context = application).postDao())
-//    val data: LiveData<FeedModel> = repository.data
-//        .map(::FeedModel)
-//        .asLiveData(Dispatchers.Default)
     val data: LiveData<FeedModel> = AppAuth.getInstance()
-    .authStateFlow
-    .flatMapLatest { (myId, _) ->
-        repository.data
-            .map { posts ->
-                FeedModel(
-                    posts.map {
-                        it.copy(ownedByMe = it.authorId == myId)
-                    },
-                    posts.isEmpty()
-                )
-            }
-    }. asLiveData(Dispatchers.Default)
+        .authStateFlow
+        .flatMapLatest { (myId, _) ->
+            repository.data
+                .map { posts ->
+                    FeedModel(
+                        posts.map {
+                            it.copy(ownedByMe = it.authorId == myId)
+                        },
+                        posts.isEmpty()
+                    )
+                }
+        }.asLiveData(Dispatchers.Default)
     private val _dataState = MutableLiveData<FeedModelState>(FeedModelState(idle = true))
     val dataState: LiveData<FeedModelState>
         get() = _dataState
@@ -92,7 +89,7 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
             _postCreated.value = Unit
             viewModelScope.launch {
                 try {
-                    when(_photo.value) {
+                    when (_photo.value) {
                         noPhoto -> repository.save(it)
                         else -> _photo.value?.file?.let { file ->
                             repository.saveWithAttachment(it, MediaUpload(file))
@@ -177,6 +174,4 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
             _dataState.value = FeedModelState(error = true)
         }
     }
-
-
 }

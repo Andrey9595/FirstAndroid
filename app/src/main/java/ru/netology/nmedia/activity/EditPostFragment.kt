@@ -9,7 +9,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.github.dhaval2404.imagepicker.ImagePicker
-import com.google.android.material.snackbar.BaseTransientBottomBar.LENGTH_INDEFINITE
 import com.google.android.material.snackbar.Snackbar
 import ru.netology.nmedia.R
 import ru.netology.nmedia.databinding.FragmentEditPostBinding
@@ -35,40 +34,13 @@ class EditPostFragment : Fragment() {
             container,
             false
         )
-//        arguments?.textArg?.let {
-//            binding.contentEditText.setText(it)
-//        }
-//        binding.ok.setOnClickListener {
-//            val text = binding.contentEditText.text.toString()
-//            if (text.isBlank()) {
-//                Snackbar.make(binding.root, R.string.error_empty_content, LENGTH_INDEFINITE).show()
-//            } else {
-//                viewModel.changeContent(text.trim())
-//                viewModel.save()
-//                AndroidUtils.hideKeyboard(requireView())
-//                findNavController().navigateUp()
-//            }
-//        }
-//        binding.cancel.setOnClickListener {
-//            AndroidUtils.hideKeyboard(requireView())
-//            findNavController().navigateUp()
-//        }
-//        viewModel.postCreated.observe(viewLifecycleOwner) {
-////            viewModel.loodPost()
-//            findNavController().navigateUp()
-//        }
-
-//        viewModel.postCreateError.observe(viewLifecycleOwner) {
-//            Toast.makeText(requireContext(), it.getHumanReadableMessage(resources), Toast.LENGTH_LONG).show()
-//        }
-
         requireActivity().addMenuProvider(object : MenuProvider {
             override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
                 menuInflater.inflate(R.menu.menu_edit_post, menu)
             }
 
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean =
-                when (menuItem.itemId){
+                when (menuItem.itemId) {
                     R.id.save -> {
                         viewModel.changeContent(binding.content.text.toString())
                         viewModel.save()
@@ -81,9 +53,10 @@ class EditPostFragment : Fragment() {
 
         val photoLauncher = registerForActivityResult(
             ActivityResultContracts
-            .StartActivityForResult()){
-            when(it.resultCode){
-                ImagePicker.RESULT_ERROR ->{
+                .StartActivityForResult()
+        ) {
+            when (it.resultCode) {
+                ImagePicker.RESULT_ERROR -> {
                     Snackbar.make(
                         binding.root,
                         ImagePicker.getError(it.data),
@@ -101,7 +74,7 @@ class EditPostFragment : Fragment() {
             ImagePicker.Builder(this)
                 .crop()
                 .cameraOnly()
-                .maxResultSize(2048,2048)
+                .maxResultSize(2048, 2048)
                 .createIntent {
                     photoLauncher.launch(it)
                 }
@@ -111,14 +84,14 @@ class EditPostFragment : Fragment() {
             ImagePicker.Builder(this)
                 .crop()
                 .galleryOnly()
-                .maxResultSize(2048,2048)
+                .maxResultSize(2048, 2048)
                 .createIntent {
                     photoLauncher.launch(it)
                 }
         }
 
-        viewModel.photo.observe(viewLifecycleOwner){
-            if (it?.uri == null){
+        viewModel.photo.observe(viewLifecycleOwner) {
+            if (it?.uri == null) {
                 binding.picLayout.visibility = View.GONE
                 return@observe
             }

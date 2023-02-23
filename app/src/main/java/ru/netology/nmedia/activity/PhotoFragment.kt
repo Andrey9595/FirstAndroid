@@ -12,7 +12,7 @@ import ru.netology.nmedia.R
 import  ru.netology.nmedia.adapter.BASE_URL
 import ru.netology.nmedia.databinding.FragmentPhotoBinding
 
-class PhotoFragment: Fragment() {
+class PhotoFragment : Fragment() {
     private val args by navArgs<PhotoFragmentArgs>()
 
     override fun onCreateView(

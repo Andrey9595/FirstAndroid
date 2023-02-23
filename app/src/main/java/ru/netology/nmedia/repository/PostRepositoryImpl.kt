@@ -26,18 +26,18 @@ import java.io.IOException
 
 class PostRepositoryImpl(private val dao: PostDao) : PostRepository {
     override val data = dao.getAll()
-        .map(List<PostEntity>:: toDto)
+        .map(List<PostEntity>::toDto)
         .flowOn(Dispatchers.Default)
 
     override fun getNewerCount(id: Long): Flow<Int> = flow {
         while (true)
             delay(10_000L)
         val response = PostApi.service.getNewer(id)
-        if (!response.isSuccessful){
+        if (!response.isSuccessful) {
             throw ApiError(response.code(), response.message())
         }
-        val  body = response.body()?:  throw ApiError(response.code(), response.message())
-        for (i in body){
+        val body = response.body() ?: throw ApiError(response.code(), response.message())
+        for (i in body) {
             i.toShow = false
         }
         emit(body.size)
@@ -55,9 +55,9 @@ class PostRepositoryImpl(private val dao: PostDao) : PostRepository {
                 response.code(),
                 response.message()
             )
-          for (i in body){
-              i.toShow = true
-          }
+            for (i in body) {
+                i.toShow = true
+            }
             dao.insert(body.toEntity())
         } catch (e: IOException) {
             throw NetworkError
@@ -75,8 +75,6 @@ class PostRepositoryImpl(private val dao: PostDao) : PostRepository {
             }
             val body =
                 response.body() ?: throw ApiError(response.code(), response.message())
-//            body.savedOnServer = true
-//            dao.removeById(tempId)
             dao.insert(PostEntity.fromDto(body))
         } catch (e: IOException) {
             throw  NetworkError
@@ -142,7 +140,8 @@ class PostRepositoryImpl(private val dao: PostDao) : PostRepository {
     override suspend fun saveWithAttachment(post: Post, upload: MediaUpload) {
         try {
             val file = uploadFile(upload)
-            val postWithAttachment = post.copy(attachment = Attachment(file.id, AttachmentType.IMAGE))
+            val postWithAttachment =
+                post.copy(attachment = Attachment(file.id, AttachmentType.IMAGE))
             save(postWithAttachment)
         } catch (e: IOException) {
             throw NetworkError
@@ -186,5 +185,4 @@ class PostRepositoryImpl(private val dao: PostDao) : PostRepository {
             throw UnknownError
         }
     }
-
 }

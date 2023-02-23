@@ -18,12 +18,12 @@ class RegistrationViewModel(application: Application) : AndroidViewModel(applica
     val tokenReceived: LiveData<Int>
         get() = _tokenReceived
 
-    fun registerUser(login: String, pass: String){
+    fun registerUser(login: String, pass: String) {
         viewModelScope.launch {
             try {
                 repository.authentication(login, pass)
                 _tokenReceived.value = 0
-            } catch (e: Exception){
+            } catch (e: Exception) {
                 _tokenReceived.value = -1
             }
         }

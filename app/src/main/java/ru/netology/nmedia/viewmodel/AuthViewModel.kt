@@ -13,7 +13,7 @@ import ru.netology.nmedia.db.AppDb
 import ru.netology.nmedia.repository.PostRepository
 import ru.netology.nmedia.repository.PostRepositoryImpl
 
-class AuthViewModel(application: Application): AndroidViewModel(application) {
+class AuthViewModel(application: Application) : AndroidViewModel(application) {
     private val repository: PostRepository = PostRepositoryImpl(
         AppDb.getInstance(context = application).postDao()
     )
@@ -21,10 +21,10 @@ class AuthViewModel(application: Application): AndroidViewModel(application) {
         .authStateFlow
         .asLiveData(Dispatchers.Default)
     val authenticated: Boolean
-    get() = AppAuth.getInstance().authStateFlow.value.id != 0L
+        get() = AppAuth.getInstance().authStateFlow.value.id != 0L
 
-    fun authentication(login: String, password: String){
-        viewModelScope.launch{
+    fun authentication(login: String, password: String) {
+        viewModelScope.launch {
             repository.authentication(login, password)
         }
     }

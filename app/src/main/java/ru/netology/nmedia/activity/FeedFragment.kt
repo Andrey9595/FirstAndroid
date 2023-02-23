@@ -23,7 +23,7 @@ import ru.netology.nmedia.viewmodel.AuthViewModel
 
 class FeedFragment : Fragment() {
     private val viewModel: PostViewModel by viewModels(ownerProducer = ::requireParentFragment)
-private  val viewModelAuth: AuthViewModel by viewModels(ownerProducer = :: requireParentFragment)
+    private val viewModelAuth: AuthViewModel by viewModels(ownerProducer = ::requireParentFragment)
     private var _binding: FragmentFeedBinding? = null
     private val binding: FragmentFeedBinding
         get() = _binding!!
@@ -72,11 +72,11 @@ private  val viewModelAuth: AuthViewModel by viewModels(ownerProducer = :: requi
             }
 
             override fun onShare(post: Post) {
-//                viewModel.shareById(post.id)
             }
 
             override fun onImage(post: Post) {
-                val action = FeedFragmentDirections.actionFeedFragmentToPhotoFragment2(post.attachment?.url.toString())
+                val action =
+                    FeedFragmentDirections.actionFeedFragmentToPhotoFragment2(post.attachment?.url.toString())
                 findNavController().navigate(action)
             }
 
@@ -103,20 +103,20 @@ private  val viewModelAuth: AuthViewModel by viewModels(ownerProducer = :: requi
                 if (newPost) binding.list.smoothScrollToPosition(0)
             }
         }
-        viewModel.dataState.observe(viewLifecycleOwner){ state ->
+        viewModel.dataState.observe(viewLifecycleOwner) { state ->
             binding.progress.isVisible = state.loading
-//            binding.swiprefresh.isRefreshing = state.refreshing
-            if (state.error){
-                Snackbar.make(binding.root, R.string.error_loading, Snackbar.LENGTH_LONG).setAction(R.string.retry_loading){
-                    viewModel.refresh()
-                }
+            if (state.error) {
+                Snackbar.make(binding.root, R.string.error_loading, Snackbar.LENGTH_LONG)
+                    .setAction(R.string.retry_loading) {
+                        viewModel.refresh()
+                    }
                     .show()
             }
             binding.errorGroup.isVisible = state.error
         }
         viewModel.newerCount.observe(viewLifecycleOwner) { state ->
 
-            if (state != 0){
+            if (state != 0) {
                 val btnText = "Новая запись ($state)"
                 binding.newerPostsBtn.text = btnText
                 binding.newerPostsBtn.visibility = View.VISIBLE
@@ -126,7 +126,6 @@ private  val viewModelAuth: AuthViewModel by viewModels(ownerProducer = :: requi
         }
 
         binding.newerPostsBtn.setOnClickListener {
-//            viewModel.loadPosts()
             viewModel.updateShownStatus()
             it.visibility = View.GONE
         }
@@ -134,7 +133,6 @@ private  val viewModelAuth: AuthViewModel by viewModels(ownerProducer = :: requi
         binding.retryButton.setOnClickListener {
         }
 
-//        binding.fab.setOnClickListener { findNavController().navigate(R.id.action_feedFragment_to_newPostFragment) }
         binding.fab.setOnClickListener {
             if (!viewModelAuth.authenticated) {
                 findNavController().navigate(R.id.action_feedFragment_to_authFragment)
