@@ -18,11 +18,12 @@ import ru.netology.nmedia.viewmodel.PostViewModel
 import ru.netology.nmedia.R
 import ru.netology.nmedia.activity.EditPostFragment.Companion.textArg
 import ru.netology.nmedia.databinding.FragmentFeedBinding
+import ru.netology.nmedia.viewmodel.AuthViewModel
 
 
 class FeedFragment : Fragment() {
     private val viewModel: PostViewModel by viewModels(ownerProducer = ::requireParentFragment)
-
+private  val viewModelAuth: AuthViewModel by viewModels(ownerProducer = :: requireParentFragment)
     private var _binding: FragmentFeedBinding? = null
     private val binding: FragmentFeedBinding
         get() = _binding!!
@@ -58,7 +59,16 @@ class FeedFragment : Fragment() {
             }
 
             override fun onLike(post: Post) {
-                viewModel.likeById(post.id)
+                if (!viewModelAuth.authenticated) {
+                    findNavController().navigate(R.id.action_feedFragment_to_authFragment)
+                    return
+                }
+                if (!post.likedByMe) {
+                    viewModel.likeById(post.id)
+
+                } else {
+                    viewModel.disLikeById(post.id)
+                }
             }
 
             override fun onShare(post: Post) {
@@ -124,7 +134,14 @@ class FeedFragment : Fragment() {
         binding.retryButton.setOnClickListener {
         }
 
-        binding.fab.setOnClickListener { findNavController().navigate(R.id.action_feedFragment_to_newPostFragment) }
+//        binding.fab.setOnClickListener { findNavController().navigate(R.id.action_feedFragment_to_newPostFragment) }
+        binding.fab.setOnClickListener {
+            if (!viewModelAuth.authenticated) {
+                findNavController().navigate(R.id.action_feedFragment_to_authFragment)
+                return@setOnClickListener
+            }
+            findNavController().navigate(R.id.action_feedFragment_to_newPostFragment)
+        }
 
     }
 }

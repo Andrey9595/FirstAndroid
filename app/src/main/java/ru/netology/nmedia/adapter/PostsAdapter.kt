@@ -65,6 +65,7 @@ class PostViewHolder(
             author.text = post.author
             published.text = post.published
             content.text = post.content
+            menu.visibility = if (post.ownedByMe) View.VISIBLE else View.INVISIBLE
             btnLikes.isChecked = post.likedByMe
             btnLikes.text = Utils.numPostfix(post.likes)
             btnShares.text = Utils.numPostfix(post.shares)

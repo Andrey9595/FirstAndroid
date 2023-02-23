@@ -29,4 +29,8 @@
     <string name="description_take_photo" translatable="false">Take photo</string>
     <string name="description_photo" translatable="false">Photo</string>
     <string name="remove" translatable="false">Remove</string>
+    <string name="google_play_unavailable">Google Api Unavailable</string>
+    <string name="sign_in">Sign In</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="sign_out">Sign Out</string>
 </resources>

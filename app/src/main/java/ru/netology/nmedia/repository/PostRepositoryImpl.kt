@@ -11,6 +11,7 @@ import ru.netology.nmedia.api.AppError
 import ru.netology.nmedia.api.NetworkError
 import ru.netology.nmedia.api.UnknownError
 import ru.netology.nmedia.api.PostApi
+import ru.netology.nmedia.auth.AppAuth
 import ru.netology.nmedia.dao.PostDao
 import ru.netology.nmedia.dto.Attachment
 import ru.netology.nmedia.dto.Media
@@ -149,6 +150,26 @@ class PostRepositoryImpl(private val dao: PostDao) : PostRepository {
             throw UnknownError
         }
     }
+
+    override suspend fun authentication(login: String, password: String) {
+        try {
+            val response = PostApi.service.updateUser(login, password)
+            if (!response.isSuccessful) {
+                throw ApiError(response.code(), response.message())
+            }
+            val authState = response.body()
+            if (authState != null) {
+                authState.token?.let { AppAuth.getInstance().setAuth(authState.id, it) }
+            }
+        } catch (e: AppError) {
+            throw e
+        } catch (e: IOException) {
+            throw NetworkError
+        } catch (e: Exception) {
+            throw UnknownError
+        }
+    }
+
     private suspend fun uploadFile(upload: MediaUpload): Media {
         try {
             val part = MultipartBody.Part.createFormData(

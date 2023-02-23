@@ -16,5 +16,6 @@ interface PostRepository {
     suspend fun dislikeById(id: Long)
     suspend fun updateShownStatus()
     suspend fun saveWithAttachment(post: Post, upload: MediaUpload)
+    suspend fun authentication(login: String, password: String)
 
 }
