@@ -1,15 +1,26 @@
 package ru.netology.nmedia.auth
 
 import android.content.Context
+import androidx.core.content.edit
+import dagger.hilt.EntryPoint
+import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
+import ru.netology.nmedia.api.PostApiService
+import javax.inject.Inject
 
-class AppAuth private constructor(context: Context) {
+class AppAuth @Inject constructor(
+    @ApplicationContext
+    private val context: Context,
+) {
     private val prefs = context.getSharedPreferences("auth", Context.MODE_PRIVATE)
     private val idKey = "id"
     private val tokenKey = "token"
-
     private val _authStateFlow: MutableStateFlow<AuthState>
 
     init {
@@ -27,44 +38,44 @@ class AppAuth private constructor(context: Context) {
         }
     }
 
-    val authStateFlow: StateFlow<AuthState> = _authStateFlow.asStateFlow()
-
-    @Synchronized
-    fun setAuth(id: Long, token: String) {
-        _authStateFlow.value = AuthState(id, token)
-        with(prefs.edit()) {
-            putLong(idKey, id)
-            putString(tokenKey, token)
-            apply()
-        }
-    }
+    val authStateFlow = _authStateFlow.asStateFlow()
 
     @Synchronized
     fun removeAuth() {
         _authStateFlow.value = AuthState()
-        with(prefs.edit()) {
-            clear()
-            commit()
+        prefs.edit {
+            remove(tokenKey)
+            remove(idKey)
         }
+        sendPushToken()
     }
 
-    companion object {
-        @Volatile
-        private var instance: AppAuth? = null
+    @Synchronized
+    fun setAuth(id: Long, token: String) {
+        prefs.edit {
+            putString(tokenKey, token)
+            putLong(idKey, id)
+        }
+        sendPushToken()
+    }
 
-        fun getInstance(): AppAuth =
-            synchronized(this) {
-                instance ?: throw IllegalStateException(
-                    "AppAuth is not initialized, you must call AppAuth.initializeApp(Context context) first."
-                )
+    @InstallIn(SingletonComponent::class)
+    @EntryPoint
+    interface AppAuthEntryPoint {
+        fun getApiService(): PostApiService
+    }
+
+    fun sendPushToken(token: String? = null) {
+        CoroutineScope(Dispatchers.Default).launch {
+            try {
+
+            } catch (e: Exception) {
+                e.printStackTrace()
             }
-
-        fun initApp(context: Context): AppAuth = instance ?: synchronized(this) {
-            instance ?: buildAuth(context).also { instance = it }
         }
-
-        private fun buildAuth(context: Context): AppAuth = AppAuth(context)
     }
+
+    fun getId(): Long = prefs.getLong(idKey, 0L)
 }
 
 data class AuthState(val id: Long = 0, val token: String? = null)

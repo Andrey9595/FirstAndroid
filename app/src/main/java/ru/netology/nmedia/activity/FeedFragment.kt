@@ -8,9 +8,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import ru.netology.nmedia.adapter.OnInteractionListener
 import ru.netology.nmedia.adapter.PostsAdapter
 import ru.netology.nmedia.dto.Post
@@ -21,9 +23,13 @@ import ru.netology.nmedia.databinding.FragmentFeedBinding
 import ru.netology.nmedia.viewmodel.AuthViewModel
 
 
+@AndroidEntryPoint
 class FeedFragment : Fragment() {
-    private val viewModel: PostViewModel by viewModels(ownerProducer = ::requireParentFragment)
-    private val viewModelAuth: AuthViewModel by viewModels(ownerProducer = ::requireParentFragment)
+
+
+    @ExperimentalCoroutinesApi
+    private val viewModel: PostViewModel by activityViewModels()
+    private val viewModelAuth: AuthViewModel by activityViewModels()
     private var _binding: FragmentFeedBinding? = null
     private val binding: FragmentFeedBinding
         get() = _binding!!
@@ -41,6 +47,7 @@ class FeedFragment : Fragment() {
         return binding.root
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val adapter = PostsAdapter(object : OnInteractionListener {
@@ -59,7 +66,7 @@ class FeedFragment : Fragment() {
             }
 
             override fun onLike(post: Post) {
-                if (!viewModelAuth.authenticated) {
+                if (!viewModelAuth.authorized) {
                     findNavController().navigate(R.id.action_feedFragment_to_authFragment)
                     return
                 }
@@ -134,7 +141,7 @@ class FeedFragment : Fragment() {
         }
 
         binding.fab.setOnClickListener {
-            if (!viewModelAuth.authenticated) {
+            if (!viewModelAuth.authorized) {
                 findNavController().navigate(R.id.action_feedFragment_to_authFragment)
                 return@setOnClickListener
             }

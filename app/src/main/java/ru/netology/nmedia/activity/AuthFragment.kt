@@ -8,9 +8,11 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
+import dagger.hilt.android.AndroidEntryPoint
 import ru.netology.nmedia.databinding.FragmentAuthBinding
 import ru.netology.nmedia.viewmodel.RegistrationViewModel
 
+@AndroidEntryPoint
 class AuthFragment : Fragment() {
 
     private val viewModel: RegistrationViewModel by viewModels(ownerProducer = ::requireParentFragment)

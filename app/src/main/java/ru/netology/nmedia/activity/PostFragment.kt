@@ -11,6 +11,7 @@ import android.widget.PopupMenu
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.card_post.*
 import ru.netology.nmedia.R
 import ru.netology.nmedia.activity.EditPostFragment.Companion.textArg
@@ -21,7 +22,7 @@ import ru.netology.nmedia.utils.StringArg
 import ru.netology.nmedia.utils.Utils
 import ru.netology.nmedia.viewmodel.PostViewModel
 
-
+@AndroidEntryPoint
 class PostFragment : Fragment() {
 
 //    private val viewModel: PostViewModel by viewModels(ownerProducer = ::requireParentFragment)

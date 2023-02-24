@@ -1,24 +1,24 @@
 package ru.netology.nmedia.viewmodel
 
-import android.app.Application
 import android.net.Uri
 import androidx.lifecycle.*
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import ru.netology.nmedia.auth.AppAuth
-import ru.netology.nmedia.db.AppDb
 import ru.netology.nmedia.dto.MediaUpload
 import ru.netology.nmedia.dto.Post
 import ru.netology.nmedia.model.FeedModel
 import ru.netology.nmedia.model.FeedModelState
 import ru.netology.nmedia.model.PhotoModel
 import ru.netology.nmedia.repository.PostRepository
-import ru.netology.nmedia.repository.PostRepositoryImpl
 import ru.netology.nmedia.utils.SingleLiveEvent
 import java.io.File
+import javax.inject.Inject
 
 private val empty = Post(
     id = 0,
@@ -34,38 +34,36 @@ private val empty = Post(
 
 private val noPhoto = PhotoModel()
 
-class PostViewModel(application: Application) : AndroidViewModel(application) {
+@HiltViewModel
+@ExperimentalCoroutinesApi
+class PostViewModel @Inject constructor(
+    private val repository: PostRepository,
+    appAuth: AppAuth
+) : ViewModel() {
 
-    private val edited = MutableLiveData(empty)
-    private val _postCreated = SingleLiveEvent<Unit>()
-
-    val postCreated: LiveData<Unit>
-        get() = _postCreated
-
-    private val repository: PostRepository =
-        PostRepositoryImpl(AppDb.getInstance(context = application).postDao())
-    val data: LiveData<FeedModel> = AppAuth.getInstance()
-        .authStateFlow
-        .flatMapLatest { (myId, _) ->
+    val data: LiveData<FeedModel> = appAuth.authStateFlow
+        .flatMapLatest { (id, _) ->
             repository.data
                 .map { posts ->
-                    FeedModel(
-                        posts.map {
-                            it.copy(ownedByMe = it.authorId == myId)
-                        },
-                        posts.isEmpty()
-                    )
+                    FeedModel(posts.map {
+                        it.copy(ownedByMe = it.authorId == id)
+                    }, posts.isEmpty())
                 }
         }.asLiveData(Dispatchers.Default)
+
     private val _dataState = MutableLiveData<FeedModelState>(FeedModelState(idle = true))
     val dataState: LiveData<FeedModelState>
         get() = _dataState
+
     val newerCount: LiveData<Int> = data.switchMap {
         repository.getNewerCount(it.posts.firstOrNull()?.id ?: 0L)
             .catch { e -> e.printStackTrace() }
             .asLiveData(Dispatchers.Default)
     }
-
+    private val edited = MutableLiveData(empty)
+    private val _postCreated = SingleLiveEvent<Unit>()
+    val postCreated: LiveData<Unit>
+        get() = _postCreated
     private val _photo = MutableLiveData(noPhoto)
     val photo: LiveData<PhotoModel>
         get() = _photo

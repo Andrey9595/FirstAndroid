@@ -8,10 +8,12 @@ import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
+import dagger.hilt.android.AndroidEntryPoint
 import ru.netology.nmedia.R
 import  ru.netology.nmedia.adapter.BASE_URL
 import ru.netology.nmedia.databinding.FragmentPhotoBinding
 
+@AndroidEntryPoint
 class PhotoFragment : Fragment() {
     private val args by navArgs<PhotoFragmentArgs>()
 
