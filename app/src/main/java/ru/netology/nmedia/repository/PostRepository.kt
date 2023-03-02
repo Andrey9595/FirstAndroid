@@ -6,8 +6,7 @@ import ru.netology.nmedia.dto.MediaUpload
 import ru.netology.nmedia.dto.Post
 
 interface PostRepository {
-
-    val data : Flow<List<Post>>
+    val data: Flow<List<Post>>
     fun getNewerCount(id: Long): Flow<Int>
     suspend fun getAll()
     suspend fun save(post: Post)
@@ -17,5 +16,4 @@ interface PostRepository {
     suspend fun updateShownStatus()
     suspend fun saveWithAttachment(post: Post, upload: MediaUpload)
     suspend fun authentication(login: String, password: String)
-
 }

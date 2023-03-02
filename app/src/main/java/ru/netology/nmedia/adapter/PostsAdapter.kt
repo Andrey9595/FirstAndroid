@@ -46,18 +46,18 @@ class PostViewHolder(
 ) : RecyclerView.ViewHolder(binding.root) {
     fun bind(post: Post) {
         getAvatars(post, binding)
-        if (post.attachment!=null){
+        if (post.attachment != null) {
             binding.attachImage.visibility = View.VISIBLE
-            getAttachment(post,binding)
+            getAttachment(post, binding)
         } else binding.attachImage.visibility = View.GONE
-        if (post.attachment != null){
+        if (post.attachment != null) {
             binding.btnLikes.visibility = View.INVISIBLE
             binding.btnShares.visibility = View.INVISIBLE
         } else {
             binding.btnLikes.visibility = View.VISIBLE
             binding.btnShares.visibility = View.VISIBLE
         }
-        if (post.attachment != null){
+        if (post.attachment != null) {
             binding.savedOnServer.setImageResource(R.drawable.ic_baseline_public_24)
         } else binding.savedOnServer.setImageResource(R.drawable.ic_baseline_public_off_24)
 
@@ -119,7 +119,7 @@ class PostViewHolder(
             .into(binding.avatar)
     }
 
-    fun getAttachment(post: Post, binding: CardPostBinding){
+    fun getAttachment(post: Post, binding: CardPostBinding) {
         Glide.with(binding.attachImage)
             .load("$BASE_URL/media/${post.attachment?.url}")
             .error(R.drawable.ic_loading)

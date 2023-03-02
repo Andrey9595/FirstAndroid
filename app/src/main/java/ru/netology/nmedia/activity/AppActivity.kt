@@ -7,12 +7,19 @@ import android.view.MenuItem
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
+import dagger.hilt.android.AndroidEntryPoint
 import ru.netology.nmedia.R
 import ru.netology.nmedia.activity.EditPostFragment.Companion.textArg
 import ru.netology.nmedia.auth.AppAuth
 import ru.netology.nmedia.viewmodel.AuthViewModel
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class AppActivity : AppCompatActivity(R.layout.activity_app) {
+
+    @Inject
+    lateinit var appAuth: AppAuth
+
     private val viewModel: AuthViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,12 +47,13 @@ class AppActivity : AppCompatActivity(R.layout.activity_app) {
         }
 
     }
+
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.auth_menu_main, menu)
 
         menu?.let {
-            it.setGroupVisible(R.id.unauthenticated, !viewModel.authenticated)
-            it.setGroupVisible(R.id.authenticated, viewModel.authenticated)
+            it.setGroupVisible(R.id.unauthenticated, !viewModel.authorized)
+            it.setGroupVisible(R.id.authenticated, viewModel.authorized)
         }
         return true
     }
@@ -53,22 +61,17 @@ class AppActivity : AppCompatActivity(R.layout.activity_app) {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.signin -> {
-//                 TODO: just hardcode it, implementation must be in homework
-//                AppAuth.getInstance().setAuth(5, "x-token")
                 findNavController(R.id.nav_host_fragment).navigate(R.id.action_feedFragment_to_authFragment)
                 true
             }
             R.id.signup -> {
-                // TODO: just hardcode it, implementation must be in homework
-//                AppAuth.getInstance().setAuth(2, "x-token")
                 true
             }
             R.id.signout -> {
-                AppAuth.getInstance().removeAuth()
+                appAuth.removeAuth()
                 true
             }
             else -> super.onOptionsItemSelected(item)
         }
     }
-
 }
