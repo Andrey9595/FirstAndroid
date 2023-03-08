@@ -9,10 +9,13 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.paging.LoadState
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.collectLatest
 import ru.netology.nmedia.adapter.OnInteractionListener
 import ru.netology.nmedia.adapter.PostsAdapter
 import ru.netology.nmedia.dto.Post
@@ -104,12 +107,25 @@ class FeedFragment : Fragment() {
 
 
         binding.list.adapter = adapter
-        viewModel.data.observe(viewLifecycleOwner) { state ->
-            val newPost = state.posts.size > adapter.currentList.size
-            adapter.submitList(state.posts) {
-                if (newPost) binding.list.smoothScrollToPosition(0)
+//        viewModel.data.observe(viewLifecycleOwner) { state ->
+//            val newPost = state.posts.size > adapter.currentList.size
+//            adapter.submitList(state.posts) {
+//                if (newPost) binding.list.smoothScrollToPosition(0)
+//            }
+//        }
+        lifecycleScope.launchWhenCreated {
+            viewModel.dataPaging.collectLatest(adapter::submitData)
+        }
+
+        lifecycleScope.launchWhenCreated {
+            adapter.loadStateFlow.collectLatest { state ->
+                binding.swiperefresh.isRefreshing =
+                    state.refresh is LoadState.Loading ||
+                            state.prepend is LoadState.Loading ||
+                            state.append is LoadState.Loading
             }
         }
+
         viewModel.dataState.observe(viewLifecycleOwner) { state ->
             binding.progress.isVisible = state.loading
             if (state.error) {
@@ -136,9 +152,9 @@ class FeedFragment : Fragment() {
             viewModel.updateShownStatus()
             it.visibility = View.GONE
         }
-
-        binding.retryButton.setOnClickListener {
-        }
+        binding.swiperefresh.setOnRefreshListener(adapter::refresh)
+//        binding.retryButton.setOnClickListener {
+//        }
 
         binding.fab.setOnClickListener {
             if (!viewModelAuth.authorized) {
