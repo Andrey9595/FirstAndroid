@@ -19,8 +19,8 @@ class RegistrationViewModel @Inject constructor(
     apiService: PostApiService,
     appAuth: AppAuth
 ) : ViewModel() {
-    private val repository: PostRepository =
-        PostRepositoryImpl(postDao, apiService, appAuth)
+//    private val repository: PostRepository =
+//        PostRepositoryImpl(postDao, apiService, appAuth)
 
     private val _tokenReceived = SingleLiveEvent<Int>()
     val tokenReceived: LiveData<Int>
@@ -29,7 +29,7 @@ class RegistrationViewModel @Inject constructor(
     fun registerUser(login: String, pass: String) {
         viewModelScope.launch {
             try {
-                repository.authentication(login, pass)
+//                repository.authentication(login, pass)
                 _tokenReceived.value = 0
             } catch (e: Exception) {
                 _tokenReceived.value = -1
