@@ -1,9 +1,7 @@
 package ru.netology.nmedia.repository
 
 
-import androidx.paging.Pager
-import androidx.paging.PagingConfig
-import androidx.paging.PagingData
+import androidx.paging.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
@@ -12,6 +10,8 @@ import okhttp3.RequestBody.Companion.asRequestBody
 import ru.netology.nmedia.api.*
 import ru.netology.nmedia.auth.AppAuth
 import ru.netology.nmedia.dao.PostDao
+import ru.netology.nmedia.dao.PostRemoteKeyDao
+import ru.netology.nmedia.db.AppDb
 import ru.netology.nmedia.dto.Attachment
 import ru.netology.nmedia.dto.Media
 import ru.netology.nmedia.dto.MediaUpload
@@ -24,19 +24,28 @@ import java.io.IOException
 import javax.inject.Inject
 
 
-class PostRepositoryImpl@Inject constructor(
+class PostRepositoryImpl @Inject constructor(
+    appDb: AppDb,
+    postRemoteKeyDao: PostRemoteKeyDao,
     private val dao: PostDao,
-    private val apiService:PostApiService,
+    private val apiService: PostApiService,
     private val appAuth: AppAuth
 ) : PostRepository {
-
+    @OptIn(ExperimentalPagingApi::class)
 //    override val data = dao.getAll()
 //        .map(List<PostEntity>::toDto)
 //        .flowOn(Dispatchers.Default)
     override val dataPaging: Flow<PagingData<Post>> = Pager(
-        config = PagingConfig(pageSize = 5, enablePlaceholders = false),
-        pagingSourceFactory = { PostPagingSource(apiService) },
-    ).flow
+//        config = PagingConfig(pageSize = 5, enablePlaceholders = false),
+//        pagingSourceFactory = { PostPagingSource(apiService) },
+//    ).flow
+
+        config = PagingConfig(pageSize = 25),
+        remoteMediator = PostRemoteMediator(apiService, appDb, dao, postRemoteKeyDao),
+        pagingSourceFactory = dao::pagingSource,
+    ).flow.map { pagingData ->
+        pagingData.map(PostEntity::toDto)
+    }
 
     override val dataPosts = dao.getAll()
         .map(List<PostEntity>::toDto)
@@ -171,7 +180,7 @@ class PostRepositoryImpl@Inject constructor(
             }
             val authState = response.body()
             if (authState != null) {
-                authState.token?.let {appAuth.setAuth(authState.id, it) }
+                authState.token?.let { appAuth.setAuth(authState.id, it) }
             }
         } catch (e: AppError) {
             throw e
