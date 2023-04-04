@@ -12,6 +12,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
+import androidx.recyclerview.widget.DividerItemDecoration
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -22,6 +23,7 @@ import ru.netology.nmedia.dto.Post
 import ru.netology.nmedia.viewmodel.PostViewModel
 import ru.netology.nmedia.R
 import ru.netology.nmedia.activity.EditPostFragment.Companion.textArg
+import ru.netology.nmedia.adapter.PostLoadingStateAdapter
 import ru.netology.nmedia.databinding.FragmentFeedBinding
 import ru.netology.nmedia.viewmodel.AuthViewModel
 
@@ -106,7 +108,18 @@ class FeedFragment : Fragment() {
         })
 
 
-        binding.list.adapter = adapter
+//        binding.list.adapter = adapter\
+        binding.list.adapter = adapter.withLoadStateHeaderAndFooter(
+            header = PostLoadingStateAdapter{
+                adapter.retry()},
+            footer = PostLoadingStateAdapter{
+                adapter.retry()
+            }
+        )
+
+        binding.list.addItemDecoration(
+            DividerItemDecoration(binding.list.context, DividerItemDecoration.VERTICAL)
+        )
 //        viewModel.data.observe(viewLifecycleOwner) { state ->
 //            val newPost = state.posts.size > adapter.currentList.size
 //            adapter.submitList(state.posts) {
@@ -120,9 +133,9 @@ class FeedFragment : Fragment() {
         lifecycleScope.launchWhenCreated {
             adapter.loadStateFlow.collectLatest { state ->
                 binding.swiperefresh.isRefreshing =
-                    state.refresh is LoadState.Loading ||
-                            state.prepend is LoadState.Loading ||
-                            state.append is LoadState.Loading
+                    state.refresh is LoadState.Loading
+//                            || state.prepend is LoadState.Loading ||
+//                            state.append is LoadState.Loading
             }
         }
 
