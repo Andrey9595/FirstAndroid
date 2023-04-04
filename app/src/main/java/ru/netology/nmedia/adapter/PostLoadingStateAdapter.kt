@@ -37,6 +37,5 @@ class PostLoadingViewHolder(
                 retryListener()
             }
         }
-
     }
 }

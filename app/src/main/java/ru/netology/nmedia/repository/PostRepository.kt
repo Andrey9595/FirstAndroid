@@ -7,7 +7,6 @@ import ru.netology.nmedia.dto.MediaUpload
 import ru.netology.nmedia.dto.Post
 
 interface PostRepository {
-//    val data: Flow<List<Post>>
     val dataPaging: Flow<PagingData<Post>>
     val dataPosts: Flow<List<Post>>
     fun getNewerCount(id: Long): Flow<Int>

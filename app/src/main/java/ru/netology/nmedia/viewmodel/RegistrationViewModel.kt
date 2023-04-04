@@ -8,8 +8,6 @@ import kotlinx.coroutines.launch
 import ru.netology.nmedia.api.PostApiService
 import ru.netology.nmedia.auth.AppAuth
 import ru.netology.nmedia.dao.PostDao
-import ru.netology.nmedia.repository.PostRepository
-import ru.netology.nmedia.repository.PostRepositoryImpl
 import ru.netology.nmedia.utils.SingleLiveEvent
 import javax.inject.Inject
 
@@ -19,8 +17,6 @@ class RegistrationViewModel @Inject constructor(
     apiService: PostApiService,
     appAuth: AppAuth
 ) : ViewModel() {
-//    private val repository: PostRepository =
-//        PostRepositoryImpl(postDao, apiService, appAuth)
 
     private val _tokenReceived = SingleLiveEvent<Int>()
     val tokenReceived: LiveData<Int>
@@ -29,7 +25,6 @@ class RegistrationViewModel @Inject constructor(
     fun registerUser(login: String, pass: String) {
         viewModelScope.launch {
             try {
-//                repository.authentication(login, pass)
                 _tokenReceived.value = 0
             } catch (e: Exception) {
                 _tokenReceived.value = -1

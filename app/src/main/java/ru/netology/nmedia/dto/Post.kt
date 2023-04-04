@@ -30,7 +30,7 @@ data class Post(
 data class Ad(
     override val id: Long,
     val image: String
-): FeedItem
+) : FeedItem
 
 data class Attachment(
     val url: String,

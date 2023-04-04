@@ -16,7 +16,6 @@ import ru.netology.nmedia.auth.AppAuth
 import ru.netology.nmedia.dto.FeedItem
 import ru.netology.nmedia.dto.MediaUpload
 import ru.netology.nmedia.dto.Post
-import ru.netology.nmedia.entity.PostEntity
 import ru.netology.nmedia.model.FeedModel
 import ru.netology.nmedia.model.FeedModelState
 import ru.netology.nmedia.model.PhotoModel
@@ -50,16 +49,15 @@ class PostViewModel @Inject constructor(
         .flatMapLatest { (id, _) ->
             repository.dataPaging.map { pagingData ->
                 pagingData.map {
-//                    post.copy(ownedByMe = post.authorId == id)
                     if (it is Post) {
                         it.copy(ownedByMe = it.authorId == id)
-                    } else{
+                    } else {
                         it
                     }
                 }
             }
         }
-   private val dataPosts: LiveData<FeedModel> = appAuth.authStateFlow
+    private val dataPosts: LiveData<FeedModel> = appAuth.authStateFlow
         .flatMapLatest { (id, _) ->
             repository.dataPosts
                 .map { posts ->
@@ -85,10 +83,6 @@ class PostViewModel @Inject constructor(
     private val _photo = MutableLiveData(noPhoto)
     val photo: LiveData<PhotoModel>
         get() = _photo
-
-//    init {
-//        loadPosts()
-//    }
 
     fun loadPosts() = viewModelScope.launch {
         _dataState.value = FeedModelState(loading = true)

@@ -67,7 +67,6 @@ class FeedFragment : Fragment() {
 
             override fun onRemove(post: Post) {
                 viewModel.removeById(post.id)
-
             }
 
             override fun onLike(post: Post) {
@@ -107,12 +106,11 @@ class FeedFragment : Fragment() {
             }
         })
 
-
-//        binding.list.adapter = adapter\
         binding.list.adapter = adapter.withLoadStateHeaderAndFooter(
-            header = PostLoadingStateAdapter{
-                adapter.retry()},
-            footer = PostLoadingStateAdapter{
+            header = PostLoadingStateAdapter {
+                adapter.retry()
+            },
+            footer = PostLoadingStateAdapter {
                 adapter.retry()
             }
         )
@@ -120,12 +118,7 @@ class FeedFragment : Fragment() {
         binding.list.addItemDecoration(
             DividerItemDecoration(binding.list.context, DividerItemDecoration.VERTICAL)
         )
-//        viewModel.data.observe(viewLifecycleOwner) { state ->
-//            val newPost = state.posts.size > adapter.currentList.size
-//            adapter.submitList(state.posts) {
-//                if (newPost) binding.list.smoothScrollToPosition(0)
-//            }
-//        }
+
         lifecycleScope.launchWhenCreated {
             viewModel.dataPaging.collectLatest(adapter::submitData)
         }
@@ -134,8 +127,6 @@ class FeedFragment : Fragment() {
             adapter.loadStateFlow.collectLatest { state ->
                 binding.swiperefresh.isRefreshing =
                     state.refresh is LoadState.Loading
-//                            || state.prepend is LoadState.Loading ||
-//                            state.append is LoadState.Loading
             }
         }
 
@@ -157,7 +148,6 @@ class FeedFragment : Fragment() {
                 binding.newerPostsBtn.text = btnText
                 binding.newerPostsBtn.visibility = View.VISIBLE
             }
-
             println("state: $state")
         }
 
@@ -166,8 +156,6 @@ class FeedFragment : Fragment() {
             it.visibility = View.GONE
         }
         binding.swiperefresh.setOnRefreshListener(adapter::refresh)
-//        binding.retryButton.setOnClickListener {
-//        }
 
         binding.fab.setOnClickListener {
             if (!viewModelAuth.authorized) {
@@ -176,7 +164,6 @@ class FeedFragment : Fragment() {
             }
             findNavController().navigate(R.id.action_feedFragment_to_newPostFragment)
         }
-
     }
 }
 

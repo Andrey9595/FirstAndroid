@@ -44,7 +44,6 @@ class ApiModule {
                 return@addInterceptor chain.proceed(newRequest)
             }
             chain.proceed(chain.request())
-
         }
         .build()
 
@@ -63,5 +62,4 @@ class ApiModule {
     fun provideApiService(
         retrofit: Retrofit
     ): PostApiService = retrofit.create()
-
 }
